@@ -1,0 +1,146 @@
+.sidebar {
+  width: 250px;
+  height: 100vh; /* Ocupa a altura total da tela */
+  background-color: #1e3a8a; /* Azul escuro do Patri-Tech */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed; /* Fixa na tela */
+  left: 0;
+  top: 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transition: width 0.3s ease; /* Adiciona transição para suavizar o recolhimento */
+}
+
+/* Estilos para a sidebar recolhida */
+.sidebar.collapsed {
+  width: 60px; /* Largura menor quando recolhida */
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between; /* Alinha o título e o botão */
+  align-items: center;
+  height: 70px;
+  padding: 0 15px; /* Ajusta o padding */
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center; /* Centraliza o logo quando colapsado */
+  padding: 0;
+}
+
+.sidebar-header h2 {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 0;
+  white-space: nowrap; /* Evita quebra de linha */
+  overflow: hidden; /* Esconde o texto que excede */
+}
+
+.sidebar.collapsed .sidebar-header h2 {
+  font-size: 18px; /* Ajusta o tamanho da fonte para "PT" */
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar.collapsed .toggle-btn {
+  margin-left: auto; /* Move o botão para a direita quando colapsado */
+}
+
+.sidebar nav {
+  flex: 1; /* Faz o menu ocupar o espaço disponível */
+  padding-top: 20px;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  color: #bfdbfe; /* Azul claro para texto não selecionado */
+  text-decoration: none;
+  font-size: 16px;
+  gap: 12px; /* Espaço entre ícone e texto */
+  transition: all 0.3s;
+  border-left: 4px solid transparent;
+}
+
+.sidebar.collapsed .sidebar nav a {
+  justify-content: center; /* Centraliza ícones quando colapsado */
+  padding: 15px 0; /* Ajusta o padding */
+}
+
+.sidebar nav a span {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar nav a span {
+  opacity: 0; /* Esconde o texto quando colapsado */
+  width: 0; /* Remove a largura do texto */
+}
+
+.sidebar nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Estilo do link ativo (página atual) */
+.sidebar nav a.active {
+  background-color: #2563eb; /* Azul destaque */
+  color: white;
+  border-left: 4px solid white;
+}
+
+.logout-section {
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #bfdbfe;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 5px;
+  transition: 0.3s;
+}
+
+.sidebar.collapsed .logout-btn {
+  justify-content: center; /* Centraliza o botão quando colapsado */
+  padding: 10px 0;
+}
+
+.sidebar.collapsed .logout-btn span {
+  opacity: 0; /* Esconde o texto quando colapsado */
+  width: 0;
+}
+
+.logout-btn:hover {
+  color: #ef4444; /* Vermelho ao passar o mouse */
+}

@@ -1,0 +1,68 @@
+/* Cabeçalho da página com botão alinhado à direita */
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header-row h1 {
+  margin: 0;
+  color: #1e3a8a;
+  font-size: 24px;
+}
+
+.page-header-row p {
+  color: #6b7280;
+  margin: 5px 0 0 0;
+}
+
+/* Botão de Adicionar (Verde para destacar) */
+.btn-add {
+  background-color: #10b981; /* Verde Esmeralda */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-add:hover {
+  background-color: #059669;
+}
+
+/* Estado Vazio (quando não tem dados) */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.empty-state p {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Ajustes finos na tabela */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background-color: #f9fafb;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.custom-table tr:hover {
+  background-color: #f8fafc; /* Efeito hover nas linhas */
+}
