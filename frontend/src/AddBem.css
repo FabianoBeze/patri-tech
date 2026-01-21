@@ -1,0 +1,56 @@
+/* Limita a largura do formulário para não ficar esticado demais */
+.form-panel {
+  max-width: 800px; /* Largura máxima ideal */
+  margin: 0 auto;   /* Centraliza na tela */
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+  gap: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9fafb;
+  transition: border-color 0.2s;
+  box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #2563eb; /* Azul do tema ao clicar */
+  outline: none;
+  background-color: white;
+}
+
+.btn-save {
+  background-color: #1e3a8a; /* Azul escuro Patri-Tech */
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #1e40af; /* Azul um pouco mais claro */
+}
