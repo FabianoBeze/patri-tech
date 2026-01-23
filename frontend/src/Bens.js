@@ -15,6 +15,7 @@ function Bens() {
   const [showHistorico, setShowHistorico] = useState(false);
   const [historicoSelecionado, setHistoricoSelecionado] = useState([]);
   const [bemSelecionadoNome, setBemSelecionadoNome] = useState('');
+  
 
   useEffect(() => {
     fetchBens();
@@ -51,6 +52,7 @@ function Bens() {
 
   const handleVerHistorico = async (bem) => {
     setBemSelecionadoNome(bem.nome);
+    
     if (bem.historico) {
         setHistoricoSelecionado(bem.historico);
         setShowHistorico(true);
@@ -97,34 +99,40 @@ function Bens() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left', backgroundColor: '#f9fafb' }}>
-                  <th style={{ padding: '12px' }}>Número de Série</th> {/* <--- Este cabeçalho */}
+                  <th style={{ padding: '12px' }}>Número de série</th>
                   <th style={{ padding: '12px' }}>Nome</th>
                   <th style={{ padding: '12px' }}>Localização</th>
                   <th style={{ padding: '12px' }}>Situação</th>
                   <th style={{ padding: '12px', textAlign: 'center' }}>Ações</th>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredBens.map((bem) => (
-                  <tr key={bem.id} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '12px', fontWeight: 'bold', color: '#555' }}>{bem.tombo}</td>
-                    <td style={{ padding: '12px' }}>{bem.nome}</td>
-                    <td style={{ padding: '12px' }}>
-                        <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{bem.sala_nome || 'Sem Sala'}</div>
-                        <div style={{ fontSize: '12px', color: '#666' }}>{bem.unidade_nome}</div>
-                    </td>
-                    <td style={{ padding: '12px' }}>{bem.situacao}</td>
-                    <td style={{ padding: '12px', textAlign: 'center' }}>
-                        <button onClick={() => handleVerHistorico(bem)} style={{ marginRight: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#007bff' }} title="Histórico"><FaHistory size={18} /></button>
-                        <button onClick={() => navigate(`/edit-bem/${bem.id}`)} style={{ marginRight: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b' }} title="Editar"><FaEdit size={18} /></button>
-                        <button onClick={() => handleDelete(bem.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }} title="Excluir"><FaTrash size={16} /></button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+      </thead>
+      <tbody>
+        {filteredBens.map((bem) => (
+          <tr key={bem.id} style={{ borderBottom: '1px solid #eee' }}>
+            <td style={{ padding: '12px', fontWeight: 'bold', color: '#555' }}>{bem.tombo}</td>
+            <td style={{ padding: '12px' }}>{bem.nome}</td>
+            <td style={{ padding: '12px' }}>
+              <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{bem.sala_nome || 'Sem Sala'}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>{bem.unidade_nome}</div>
+            </td>
+            <td style={{ padding: '12px' }}>{bem.situacao}</td>
+            <td style={{ padding: '12px', textAlign: 'center' }}>
+              <button onClick={() => handleVerHistorico(bem)} style={{ marginRight: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#007bff' }} title="Histórico">
+                <FaHistory size={18} />
+              </button>
+              <button onClick={() => navigate(`/edit-bem/${bem.id}`)} style={{ marginRight: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b' }} title="Editar">
+                <FaEdit size={18} />
+              </button>
+              <button onClick={() => handleDelete(bem.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }} title="Excluir">
+                <FaTrash size={16} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
         <HistoricoModal isOpen={showHistorico} onClose={() => setShowHistorico(false)} historico={historicoSelecionado} nomeBem={bemSelecionadoNome} />
       </main>
     </div>

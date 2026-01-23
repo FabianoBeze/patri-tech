@@ -136,8 +136,8 @@ function UnidadeDetalhes() {
               marginRight: '5px', padding:'5px 10px', 
               background: salaSelecionada === 'todas' ? '#2563eb' : '#e2e8f0', 
               color: salaSelecionada === 'todas' ? 'white' : 'black', 
-              border:'none', borderRadius:'4px', cursor:'pointer'
-            }}
+              border:'none', borderRadius:'4px', cursor:'pointer'}}
+            
           >
             Todas
           </button>
@@ -174,7 +174,7 @@ function UnidadeDetalhes() {
                 {Object.keys(bensPorSala).map((salaNome, indexSala) => (
                   <React.Fragment key={indexSala}>
                     {/* Linha de título da sala */}
-                    <tr style={{background: '#93d8eb', fontWeight: 'bold'}}> {/* Alterado o background aqui */}
+                    <tr style={{background: '#93d8eb', fontWeight: 'bold'}}> 
                       <td colSpan="7">{salaNome}</td>
                     </tr>
 

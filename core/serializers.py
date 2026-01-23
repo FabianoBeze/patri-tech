@@ -1,6 +1,31 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response    
 from django.contrib.auth.models import User
 from .models import Unidade, Categoria, Bem, Gestor, Sala, Historico
+
+class DashboardResumoSerializer(serializers.Serializer):
+    total_bens = serializers.IntegerField()
+    total_unidades = serializers.IntegerField()
+    total_categorias = serializers.IntegerField()
+    total_salas = serializers.IntegerField()
+    total_gestores = serializers.IntegerField()
+
+class DashboardResumoView(GenericAPIView):
+    serializer_class = DashboardResumoSerializer
+
+    def get(self, request):
+        data = {
+            'total_bens': Bem.objects.count(),
+            'total_unidades': Unidade.objects.count(),
+            'total_categorias': Categoria.objects.count(),
+            'total_salas': Sala.objects.count(),
+            'total_gestores': Gestor.objects.count(),
+        }
+        return Response(data, status=status.HTTP_200_OK)
+        
+dashboard_resumo = DashboardResumoView.as_view()
+        
 
 # --- HISTÓRICO (Necessário para o rastreamento) ---
 class HistoricoSerializer(serializers.ModelSerializer):
