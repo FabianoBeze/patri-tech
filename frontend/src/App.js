@@ -9,6 +9,7 @@ import Categorias from './Categorias';
 import Salas from './Salas'; 
 import UnidadeDetalhes from './UnidadeDetalhes';
 import AddUnidade from './AddUnidade';
+import EditUnidade from './EditUnidade'; // Importar o novo componente EditUnidade
 import AddCategoria from './AddCategoria';
 import AddGestor from './AddGestor';
 
@@ -49,6 +50,7 @@ function App() {
         <Route path="/unidades" element={<PrivateRoute element={<Unidades />} />} />
         <Route path="/unidades/:id" element={<PrivateRoute element={<UnidadeDetalhes />} />} />
         <Route path="/add-unidade" element={<PrivateRoute element={<AddUnidade />} />} />
+        <Route path="/edit-unidade/:id" element={<PrivateRoute element={<EditUnidade />} />} /> {/* Nova rota para editar unidade */}
         
         <Route path="/categorias" element={<PrivateRoute element={<Categorias />} />} /> 
         <Route path="/add-categoria" element={<PrivateRoute element={<AddCategoria />} />} />

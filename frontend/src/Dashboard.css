@@ -1,35 +1,71 @@
 /* --- LAYOUT GERAL --- */
+:root {
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
+}
+
 .dashboard-container {
-  display: flex; /* Mantido para organização geral, mas o sidebar fixo não participa do flex */
+  display: flex;
   min-height: 100vh;
-  background-color: #f3f4f6; /* Fundo cinza claro */
+  background-color: #f3f4f6;
+  width: 100%;
+  transition: all 0.3s ease;
 }
 
-/* Conteúdo principal empurrado para a direita por causa da Sidebar */
+/* O conteúdo se ajusta dinamicamente */
 .content {
-  margin-left: 250px; /* Largura padrão da sidebar */
-  padding: 30px;
-  overflow-y: auto;
-  transition: margin-left 0.3s ease; /* Adiciona transição para suavizar o movimento */
-
-  /* Removidas as propriedades de centralização do próprio .content */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: flex-start; */
+  flex-grow: 1;
+  width: 100%;
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Quando a sidebar está recolhida, o conteúdo principal se expande */
-.content.content-expanded {
-  margin-left: 60px; /* Largura da sidebar recolhida */
+/* Ajuste de margem baseado no estado da Sidebar (definido no Layout.js) */
+.sidebar-open .content {
+  margin-left: 260px;
 }
 
-/* Adicionar um max-width para o conteúdo dentro do main para evitar que ele se espalhe demais */
-/* Esta regra ainda é válida para o conteúdo interno */
-.content > div { /* Aplica a elementos filhos diretos do .content */
-  max-width: 1200px; /* Largura máxima para o conteúdo */
-  width: 100%; /* Garante que ocupe a largura disponível até o max-width */
-  margin: 0 auto; /* Centraliza o conteúdo dentro do .content */
+.sidebar-closed .content {
+  margin-left: 80px;
+}
+
+/* Centralizador interno do conteúdo */
+.content > div {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* --- RESPONSIVIDADE (CELULAR) --- */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; /* A barra flutua sobre o conteúdo */
+    left: 0;
+    z-index: 1000;
+    width: 260px;
+    height: 100vh;
+    /* Se estiver colapsada no mobile, ela "some" para a esquerda */
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%); /* Esconde a barra totalmente */
+    width: 0;
+  }
+
+  .content {
+    margin-left: 0 !important; /* IMPORTANTE: No mobile, nunca tem margem esquerda */
+    width: 100% !important;
+    padding: 10px;
+  }
+
+  /* Ajuste para o botão de abrir/fechar não sumir no mobile */
+  .toggle-btn {
+    display: block;
+  }
 }
 
 /* --- DASHBOARD (CARTÕES) --- */
@@ -79,13 +115,13 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* --- TABELAS (ESTILO NOVO) --- */
+/* --- TABELAS --- */
 .table-panel {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .custom-table {
@@ -114,9 +150,7 @@
 
 .row-hover:hover {
   background-color: #f8fafc;
-  transform: scale(1.005);
   transition: all 0.2s ease;
-  cursor: pointer;
 }
 
 /* ITENS ESPECÍFICOS DA TABELA */
@@ -139,42 +173,24 @@
   display: flex; align-items: center; gap: 8px;
 }
 
-/* Responsividade (Celular) */
-@media (max-width: 768px) {
-  .content {
-    margin-left: 0; /* Em telas pequenas, a sidebar pode sobrepor ou ser escondida */
-    padding: 15px;
-  }
-  .dashboard-bottom { grid-template-columns: 1fr; }
-}
-
-/* =========================================
-   BOTÃO DE CÓDIGO DE BARRAS (Novo Visual)
-   ========================================= */
+/* --- BOTÃO BARCODE --- */
 .btn-barcode {
-  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%); /* Gradiente Roxo-Azul */
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
   color: white;
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 600;
-  padding: 12px 28px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 50px; /* Formato de Pílula (arredondado) */
+  border-radius: 50px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px; /* Espaço entre ícone e texto */
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); /* Sombra colorida brilhante */
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .btn-barcode:hover {
-  transform: translateY(-3px); /* Sobe um pouquinho */
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5); /* Sombra aumenta */
-  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
-}
-
-.btn-barcode:active {
-  transform: translateY(1px); /* Efeito de clique */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
 }
