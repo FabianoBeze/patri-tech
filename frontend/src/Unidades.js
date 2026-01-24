@@ -3,11 +3,17 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css'; 
-import { FaMapMarkerAlt, FaBuilding, FaPlus } from 'react-icons/fa'; // Ícones
+import { FaMapMarkerAlt, FaBuilding, FaPlus, FaArrowLeft } from 'react-icons/fa'; // Ícones
 
 function Unidades() {
   const navigate = useNavigate();
   const [unidades, setUnidades] = useState([]);
+
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -24,7 +30,7 @@ function Unidades() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         
         {/* Título e Botão Verde */}
@@ -34,16 +40,24 @@ function Unidades() {
               <p style={{color: '#6b7280'}}>Visualize e cadastre as filiais e sedes da empresa.</p>
             </div>
             
-            <button onClick={() => navigate('/add-unidade')} style={{
-                display: 'flex', alignItems: 'center', gap: '8px', 
-                background: '#10b981', padding: '12px 20px', borderRadius: '8px', border:'none', color:'white', fontWeight:'bold', cursor:'pointer'
-            }}>
-              <FaPlus /> Nova Unidade
-            </button>
+            <div style={{display: 'flex', gap: '10px'}}>
+              <button onClick={() => navigate('/dashboard')} style={{
+                  display: 'flex', alignItems: 'center', gap: '8px', 
+                  background: '#e2e8f0', padding: '12px 20px', borderRadius: '8px', border:'none', color:'#333', fontWeight:'bold', cursor:'pointer'
+              }}>
+                <FaArrowLeft /> Voltar ao Dashboard
+              </button>
+              <button onClick={() => navigate('/add-unidade')} style={{
+                  display: 'flex', alignItems: 'center', gap: '8px', 
+                  background: '#10b981', padding: '12px 20px', borderRadius: '8px', border:'none', color:'white', fontWeight:'bold', cursor:'pointer'
+              }}>
+                <FaPlus /> Nova Unidade
+              </button>
+            </div>
         </div>
 
         {/* A Tabela Nova */}
-        <div className="panel table-panel">
+        <div className="panel table-panel responsive-table-container">
           {unidades.length === 0 ? (
             <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
                 <FaBuilding size={40} style={{marginBottom: '10px', opacity: 0.5}} />

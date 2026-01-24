@@ -12,6 +12,7 @@ function EditBem() {
   const [unidades, setUnidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [salas, setSalas] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
 
   // Estado com todos os campos do Bem
   const [formData, setFormData] = useState({
@@ -96,9 +97,14 @@ function EditBem() {
     } catch (error) { alert('Erro ao atualizar bem.'); }
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <div className="page-header" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
              <button onClick={() => navigate('/bens')} style={{ border:'none', background:'none', cursor:'pointer', fontSize:'20px' }}><FaArrowLeft /></button>
@@ -157,7 +163,7 @@ function EditBem() {
                         </select>
                     </div>
                     <div style={{ flex: 1 }}>
-                        <label>Situação</label>
+                        <label>Situacao</label>
                         <select name="situacao" value={formData.situacao} onChange={handleChange} className="form-control" style={{ width: '100%', padding: '10px' }}>
                             <option value="RECUPERAVEL">Recuperável</option>
                             <option value="ANTIECONOMICO">Antieconômico</option>

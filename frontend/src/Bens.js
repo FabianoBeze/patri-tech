@@ -4,13 +4,14 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import HistoricoModal from './HistoricoModal';
 import './Dashboard.css';
-import { FaEdit, FaTrash, FaPlus, FaHistory, FaSearch, FaBox } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaHistory, FaSearch, FaBox, FaArrowLeft } from 'react-icons/fa';
 
 function Bens() {
   const navigate = useNavigate();
   const [bens, setBens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
   
   const [showHistorico, setShowHistorico] = useState(false);
   const [historicoSelecionado, setHistoricoSelecionado] = useState([]);
@@ -75,18 +76,28 @@ function Bens() {
     bem.tombo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
             <h1>Gerenciar Patrimônio</h1>
             <p>Listagem geral de bens móveis.</p>
           </div>
-          <button onClick={() => navigate('/add-bem')} className="btn-primary" style={{ padding: '10px 15px', borderRadius: '5px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <FaPlus /> Novo Bem
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button onClick={() => navigate('/dashboard')} className="btn-secondary" style={{ padding: '10px 15px', borderRadius: '5px', backgroundColor: '#6c757d', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FaArrowLeft /> Voltar ao Dashboard
+            </button>
+            <button onClick={() => navigate('/add-bem')} className="btn-primary" style={{ padding: '10px 15px', borderRadius: '5px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FaPlus /> Novo Bem
+            </button>
+          </div>
         </div>
 
         <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '10px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>

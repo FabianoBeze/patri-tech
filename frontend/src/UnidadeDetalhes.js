@@ -25,6 +25,12 @@ function UnidadeDetalhes() {
 
   const [salaSelecionada, setSalaSelecionada] = useState('todas'); // estado para filtrar por sala
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   useEffect(() => {
     carregarBens();
     const token = localStorage.getItem('access_token');
@@ -105,7 +111,7 @@ function UnidadeDetalhes() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content" style={{position: 'relative'}}>
         
         <div style={{display: 'flex', alignItems: 'center', marginBottom: '20px'}}>

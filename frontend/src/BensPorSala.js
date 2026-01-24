@@ -14,6 +14,12 @@ function BensPorSala() {
   const [error, setError] = useState(null);
   const [salaNome, setSalaNome] = useState(''); // Para exibir o nome da sala
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   const fetchBensPorSala = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -41,7 +47,7 @@ function BensPorSala() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>

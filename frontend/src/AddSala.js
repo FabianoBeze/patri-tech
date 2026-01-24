@@ -10,6 +10,7 @@ function AddSala() {
   const [unidades, setUnidades] = useState([]);
   const [nome, setNome] = useState('');
   const [unidadeId, setUnidadeId] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -38,9 +39,14 @@ function AddSala() {
     }
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar isCollapsed={false} />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1>Cadastrar Sala</h1>

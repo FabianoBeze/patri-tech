@@ -11,11 +11,34 @@ function Dashboard() {
   const [bens, setBens] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true); // Inicializa sempre recolhido
+
+  console.log('Dashboard rendered. isSidebarCollapsed state:', isSidebarCollapsed);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
+    console.log('toggleSidebar called. New isSidebarCollapsed:', !isSidebarCollapsed);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      console.log('handleResize called. Current window width:', currentWidth);
+      if (currentWidth < 768) {
+        setIsSidebarCollapsed(true); // Recolhe se for mobile
+        console.log('Setting isSidebarCollapsed to true (mobile)');
+      } else {
+        setIsSidebarCollapsed(false); // Expande se for desktop
+        console.log('Setting isSidebarCollapsed to false (desktop)');
+      }
+    };
+
+    handleResize(); // Chama a função uma vez na montagem do componente
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     // Interceptor para renovar token se expirar
@@ -54,7 +77,7 @@ function Dashboard() {
     axios.get('http://127.0.0.1:8000/api/bens/', config).then(res => setBens(res.data)).catch(console.error);
     axios.get('http://127.0.0.1:8000/api/unidades/', config).then(res => setUnidades(res.data)).catch(console.error);
     axios.get('http://127.0.0.1:8000/api/categorias/', config).then(res => setCategorias(res.data)).catch(console.error);
-  }, []);
+  }, []); // Este useEffect é para a busca de dados e o interceptor
 
   // --- CÁLCULOS ---
   const bensAtivos = bens.filter(bem => !bem.data_baixa);
@@ -79,6 +102,7 @@ function Dashboard() {
 
   return (
     <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      {console.log('Dashboard rendering Sidebar. isSidebarCollapsed:', isSidebarCollapsed)}
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       
       <main className={`content ${isSidebarCollapsed ? 'content-expanded' : ''}`}>

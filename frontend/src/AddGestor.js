@@ -14,6 +14,7 @@ function Gestores() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
   
   const [formData, setFormData] = useState({
     nome: '',
@@ -134,6 +135,11 @@ function Gestores() {
     return u ? u.nome : 'N/A';
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   // --- ESTILO PARA OS CHECKBOXES ---
   const checkboxContainerStyle = {
     display: 'flex',
@@ -155,7 +161,7 @@ function Gestores() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>

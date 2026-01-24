@@ -6,6 +6,8 @@ import './Dashboard.css';
 import { FaArrowLeft, FaSave, FaPlusCircle } from 'react-icons/fa';
 import './AddBem.css';
 
+
+
 function AddBem() {
   const navigate = useNavigate();
   
@@ -13,6 +15,7 @@ function AddBem() {
   const [unidades, setUnidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [salas, setSalas] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
 
   // Estado do formulário
   const [formData, setFormData] = useState({
@@ -96,9 +99,14 @@ function AddBem() {
     }
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <div className="page-header" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
              <button onClick={() => navigate('/bens')} style={{ border:'none', background:'none', cursor:'pointer', fontSize:'20px' }}><FaArrowLeft /></button>

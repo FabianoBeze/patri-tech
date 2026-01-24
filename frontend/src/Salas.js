@@ -23,6 +23,12 @@ function Salas() {
   
   const navigate = useNavigate();
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   // --- SUAS FUNÇÕES (Lógica Mantida) ---
 
   const fetchSalas = useCallback(async () => {
@@ -129,7 +135,7 @@ function Salas() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       
       <main className="content">
         {/* Cabeçalho da Página */}

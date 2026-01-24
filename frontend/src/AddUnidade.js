@@ -12,6 +12,7 @@ function AddUnidade() {
     nome: '',
     endereco: ''
   });
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,9 +47,14 @@ function AddUnidade() {
     }
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       
       <main className="content">
         <header>

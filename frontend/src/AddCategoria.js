@@ -8,6 +8,7 @@ import './AddBem.css'; // Reaproveitando o estilo bonito
 function AddCategoria() {
   const navigate = useNavigate();
   const [nome, setNome] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Adicionar estado para o sidebar
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,9 +32,14 @@ function AddCategoria() {
     }
   };
 
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         <header>
           <h1>Nova Categoria</h1>

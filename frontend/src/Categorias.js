@@ -8,6 +8,14 @@ import { FaEdit, FaTrash, FaPlus, FaArrowLeft, FaSave, FaTimes, FaTags } from 'r
 function Categorias() {
   const navigate = useNavigate();
   
+  // Adicionar estado para o sidebar
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Função para alternar o estado do sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+  
   // Estados para dados
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -105,7 +113,7 @@ function Categorias() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       
       <main className="content">
         {/* CABEÇALHO */}

@@ -144,7 +144,39 @@
   .content {
     margin-left: 0; /* Em telas pequenas, a sidebar pode sobrepor ou ser escondida */
     padding: 15px;
+    width: 100%; /* Garante que o conteúdo ocupe 100% da largura */
   }
+
+  .content.content-expanded { /* Garante que o conteúdo ocupe toda a largura quando a sidebar está oculta em mobile */
+    margin-left: 0;
+    width: 100%; /* Garante que o conteúdo ocupe 100% da largura */
+  }
+
+  .page-header {
+    flex-direction: column; /* Empilha os itens do cabeçalho verticalmente */
+    align-items: flex-start; /* Alinha os itens à esquerda */
+    gap: 15px; /* Espaçamento entre os itens */
+  }
+
+  .page-header > div { /* Ajusta o div do título e descrição */
+    width: 100%;
+  }
+
+  .page-header > div:last-child { /* Ajusta o div dos botões */
+    width: 100%;
+    flex-direction: column; /* Empilha os botões verticalmente */
+    gap: 10px; /* Espaçamento entre os botões */
+  }
+
+  .page-header button {
+    width: 100%; /* Botões ocupam a largura total */
+    justify-content: center; /* Centraliza o conteúdo dos botões */
+  }
+
+  .responsive-table-container {
+    overflow-x: auto; /* Adiciona rolagem horizontal para tabelas */
+  }
+
   .dashboard-bottom { grid-template-columns: 1fr; }
 }
 
