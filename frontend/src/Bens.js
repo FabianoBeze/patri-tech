@@ -82,11 +82,11 @@ function Bens() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <div>
+        <div className="page-header">
+          <div className="page-header-content">
             <h1>Gerenciar Patrimônio</h1>
             <p>Listagem geral de bens móveis.</p>
           </div>

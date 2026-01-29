@@ -8,12 +8,11 @@ import { FaEdit, FaTrash, FaPlus, FaArrowLeft, FaSave, FaTimes, FaTags } from 'r
 function Categorias() {
   const navigate = useNavigate();
   
-  // Adicionar estado para o sidebar
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Reintroduzindo o estado
 
-  // Função para alternar o estado do sidebar
+  // Função para alternar o estado de recolhimento da sidebar
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarCollapsed(prevState => !prevState);
   };
   
   // Estados para dados
@@ -112,13 +111,14 @@ function Categorias() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
+      {/* Removido: mobile-menu-btn e overlay, pois o Sidebar.js gerencia isso internamente. */}
       
       <main className="content">
         {/* CABEÇALHO */}
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div>
+        <div className="page-header">
+            <div className="page-header-content">
                 <h1>Gerenciar Categorias</h1>
                 <p>Lista de categorias de bens cadastradas.</p>
             </div>
