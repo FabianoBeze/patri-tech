@@ -160,12 +160,12 @@ function Gestores() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       <main className="content">
         
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div>
+        <div className="page-header">
+            <div className="page-header-content">
                 <h1>Gestão de Pessoas</h1>
                 <p>Gerencie os usuários e suas permissões no sistema.</p>
             </div>

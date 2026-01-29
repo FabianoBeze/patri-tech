@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { FaBox, FaBuilding, FaTags, FaDollarSign, FaBarcode, FaBars } from 'react-icons/fa'; // <--- Adicionei FaBarcode e FaBars aqui
+import { FaBox, FaBuilding, FaTags, FaDollarSign, FaBarcode } from 'react-icons/fa'; // Removi FaBars
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -12,35 +12,15 @@ function Dashboard() {
   const [bens, setBens] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 768); // Inicializa recolhido se for mobile
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Estado para controlar o recolhimento da sidebar no desktop
 
-  console.log('Dashboard rendered. isSidebarCollapsed state:', isSidebarCollapsed);
-
+  // Função para alternar o estado de recolhimento da sidebar (apenas para desktop)
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prevState => !prevState);
   };
 
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      setIsSidebarCollapsed(true);
-    }
-  }, [location]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const currentWidth = window.innerWidth;
-      if (currentWidth < 768) {
-        setIsSidebarCollapsed(true);
-      } else {
-        setIsSidebarCollapsed(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // Efeito para lidar com o recolhimento inicial da sidebar em telas menores
+  // REMOVIDO: useEffect para lidar com o redimensionamento da janela, pois o Sidebar.js agora gerencia o estado mobile.
 
   useEffect(() => {
     // Interceptor para renovar token se expirar
@@ -104,23 +84,14 @@ function Dashboard() {
 
   return (
     <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      {console.log('Dashboard rendering Sidebar. isSidebarCollapsed:', isSidebarCollapsed)}
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
       
       <main className={`content ${isSidebarCollapsed ? 'content-expanded' : ''}`}>
-        {/* Botão de hambúrguer para mobile */}
-        {!isSidebarCollapsed && window.innerWidth < 768 && (
-          <div className="overlay" onClick={toggleSidebar}></div>
-        )}
-        {isSidebarCollapsed && window.innerWidth < 768 && (
-          <button onClick={toggleSidebar} className="mobile-menu-btn">
-            <FaBars />
-          </button>
-        )}
+        {/* Overlay e botão de hambúrguer para mobile foram movidos para Sidebar.js */}
         
         {/* CABEÇALHO COM O NOVO BOTÃO */}
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
+        <div className="page-header">
+            <div className="page-header-content">
               <h1>Bem-vindo a Gestão Patrimonial</h1>
               <p>Visão geral dos dados do sistema em tempo real.</p>
             </div>

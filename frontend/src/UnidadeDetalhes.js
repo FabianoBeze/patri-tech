@@ -5,6 +5,8 @@ import Sidebar from './Sidebar';
 import { FaSearch, FaArrowLeft, FaEdit, FaTimes, FaBars } from 'react-icons/fa';
 import './Dashboard.css';
 
+
+
 function UnidadeDetalhes() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -205,39 +207,34 @@ function UnidadeDetalhes() {
           </button>
         )}
         
-        <div style={{display: 'flex', alignItems: 'center', marginBottom: '20px'}}>
-            <button onClick={() => navigate('/unidades')} style={{marginRight: '15px', padding: '8px', cursor: 'pointer', border:'none', background:'#ddd', borderRadius:'5px'}}>
+        <div className="header-unidade-detalhes">
+            <button onClick={() => navigate('/unidades')} className="btn-voltar">
                 <FaArrowLeft /> Voltar
             </button>
             <div>
-                <h1 style={{margin:0}}>{nomeUnidade}</h1>
+                <h1 className="titulo-unidade-detalhes">{nomeUnidade}</h1>
             </div>
         </div>
 
-        <div className="panel" style={{marginBottom: '20px', display: 'flex', alignItems: 'center', padding: '15px'}}>
-            <FaSearch style={{marginRight: '10px', color: '#666'}} />
+        <div className="panel-busca">
+            <FaSearch className="icone-busca" />
             <input 
                 type="text" 
                 placeholder="Filtrar por nome ou nº de patrimônio..." 
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
-                style={{border: 'none', width: '100%', outline: 'none', fontSize: '16px'}}
+                className="input-busca"
             />
         </div>
 
         {/* Botões de salas */}
-        <div style={{marginBottom: '10px'}}>
+        <div className="container-botoes-salas">
           <button
             onClick={() => {
               console.log('Botão "Todas" clicado. Definindo salaSelecionada para:', 'todas');
               setSalaSelecionada('todas');
             }}
-            style={{
-              marginRight: '5px', padding:'5px 10px',
-              background: salaSelecionada === 'todas' ? '#2563eb' : '#e2e8f0',
-              color: salaSelecionada === 'todas' ? 'white' : 'black',
-              border:'none', borderRadius:'4px', cursor:'pointer'}}
-
+            className={`btn-sala ${salaSelecionada === 'todas' ? 'active' : 'inactive'}`}
           >
             Todas
           </button>
@@ -248,12 +245,7 @@ function UnidadeDetalhes() {
                 console.log('Botão de sala clicado. Definindo salaSelecionada para:', sala);
                 setSalaSelecionada(sala);
               }}
-              style={{
-                marginRight: '5px', padding:'5px 10px',
-                background: salaSelecionada === sala ? '#2563eb' : '#e2e8f0',
-                color: salaSelecionada === sala ? 'white' : 'black',
-                border:'none', borderRadius:'4px', cursor:'pointer'
-              }}
+              className={`btn-sala ${salaSelecionada === sala ? 'active' : 'inactive'}`}
             >
               {sala}
             </button>
@@ -277,37 +269,37 @@ function UnidadeDetalhes() {
                 {Object.keys(bensPorSala).map((salaNome, indexSala) => (
                   <React.Fragment key={indexSala}>
                     {/* Linha de título da sala */}
-                    <tr style={{background: '#93d8eb', fontWeight: 'bold'}}> 
+                    <tr className="sala-titulo-row"> 
                       <td colSpan="7">{salaNome}</td>
                     </tr>
 
                     {/* Linhas dos bens dessa sala */}
                     {bensPorSala[salaNome].map(bem => (
-                      <tr key={bem.id} style={{ opacity: bem.data_baixa ? 0.6 : 1, background: bem.data_baixa ? '#f8f8f8' : 'white' }}>
+                      <tr key={bem.id} className={`bem-row ${bem.data_baixa ? 'bem-inativo' : 'bem-ativo'}`}> 
                         <td><strong>{bem.tombo}</strong></td>
                         <td>{bem.nome}</td>
                         <td>
                           {(bem.origem === 'ALUGADO' || bem.origem === 'Alugado') && 
-                              <span style={{background: '#d97706', color:'white', padding:'4px 10px', borderRadius:'12px', fontSize:'11px', fontWeight:'bold', textTransform:'uppercase'}}>ALUGADO</span>
+                              <span className="badge-alugado">ALUGADO</span>
                           }
                           {(bem.origem === 'DOACAO' || bem.origem === 'Doacao') && 
-                              <span style={{background: '#2563eb', color:'white', padding:'4px 10px', borderRadius:'12px', fontSize:'11px', fontWeight:'bold', textTransform:'uppercase'}}>DOAÇÃO</span>
+                              <span className="badge-doacao">DOAÇÃO</span>
                           }
                           {(bem.origem !== 'ALUGADO' && bem.origem !== 'Alugado' && bem.origem !== 'DOACAO' && bem.origem !== 'Doacao') && 
-                              <span style={{color: '#64748b', fontSize:'12px', fontWeight:'500'}}>Próprio</span>
+                              <span className="badge-proprio">Próprio</span>
                           }
                         </td>
                         <td>{bem.situacao}</td>
                         <td>{bem.estado_conservacao}</td>
                         <td>
                           {bem.data_baixa ? 
-                              <span style={{color:'red', fontWeight:'bold', fontSize:'12px'}}>BAIXADO</span> 
-                              : <span style={{color:'green', fontWeight:'bold', fontSize:'12px'}}>ATIVO</span>}
+                              <span className="status-baixado">BAIXADO</span> 
+                              : <span className="status-ativo">ATIVO</span>}
                         </td>
                         <td>
                           <button 
                             onClick={() => abrirModal(bem)}
-                            style={{fontSize: '12px', padding: '5px 10px', cursor:'pointer', background: '#e2e8f0', border:'1px solid #cbd5e1', borderRadius:'4px', display: 'flex', alignItems: 'center', gap: '5px'}}
+                            className="btn-editar"
                           >
                             <FaEdit /> Editar
                           </button>
@@ -322,29 +314,24 @@ function UnidadeDetalhes() {
 
         {/* MODAL DE EDIÇÃO */}
         {modalAberto && (
-            <div style={{
-                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
-            }}>
-                <div style={{
-                    background: 'white', padding: '25px', borderRadius: '8px', width: '500px', maxWidth: '90%', boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
-                }}>
-                    <div style={{display:'flex', justifyContent:'space-between', marginBottom:'20px'}}>
-                        <h3 style={{margin:0}}>Editar Bem: {bemEditando?.nome}</h3>
-                        <button onClick={() => setModalAberto(false)} style={{background:'none', border:'none', cursor:'pointer', fontSize:'20px'}}>
+            <div className="modal-overlay">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h3>Editar Bem: {bemEditando?.nome}</h3>
+                        <button onClick={() => setModalAberto(false)} className="modal-close-btn">
                             <FaTimes />
                         </button>
                     </div>
 
                     <form onSubmit={salvarEdicao}>
                         {/* Campos de Edição */}
-                        <div style={{display:'flex', gap:'15px', marginBottom:'20px'}}>
-                            <div style={{flex:1}}>
-                                <label style={{display:'block', fontSize:'12px', marginBottom:'5px', fontWeight:'bold'}}>Situação</label>
+                        <div className="modal-form-group">
+                            <div>
+                                <label className="modal-label">Situação</label>
                                 <select 
                                     value={editForm.situacao}
                                     onChange={e => setEditForm({...editForm, situacao: e.target.value})}
-                                    style={{width:'100%', padding:'8px', borderRadius:'4px', border:'1px solid #ccc'}}
+                                    className="modal-select"
                                 >
                                     <option value="RECUPERAVEL">Recuperável</option>
                                     <option value="ANTIECONOMICO">Antieconômico</option>
@@ -352,12 +339,12 @@ function UnidadeDetalhes() {
                                     <option value="OCIOSO">Ocioso</option>
                                 </select>
                             </div>
-                            <div style={{flex:1}}>
-                                <label style={{display:'block', fontSize:'12px', marginBottom:'5px', fontWeight:'bold'}}>Estado de Conservação</label>
+                            <div>
+                                <label className="modal-label">Estado de Conservação</label>
                                 <select 
                                     value={editForm.estado_conservacao}
                                     onChange={e => setEditForm({...editForm, estado_conservacao: e.target.value})}
-                                    style={{width:'100%', padding:'8px', borderRadius:'4px', border:'1px solid #ccc'}}
+                                    className="modal-select"
                                 >
                                     <option value="EXCELENTE">Excelente (10)</option>
                                     <option value="BOM">Bom (8)</option>
@@ -366,42 +353,42 @@ function UnidadeDetalhes() {
                             </div>
                         </div>
 
-                        <hr style={{border:'0', borderTop:'1px solid #eee', margin:'15px 0'}} />
+                        <hr className="modal-divider" />
                         
-                        <h4 style={{color:'#dc2626', marginBottom:'15px', fontSize:'14px'}}>Registro de Baixa (Saída)</h4>
+                        <h4 className="modal-subtitle">Registro de Baixa (Saída)</h4>
                         
-                        <div style={{marginBottom:'15px'}}>
-                            <label style={{display:'block', fontSize:'12px', marginBottom:'5px'}}>Data da Baixa</label>
+                        <div className="mb-15">
+                            <label className="modal-label">Data da Baixa</label>
                             <input 
                                 type="date" 
                                 value={editForm.data_baixa} 
                                 onChange={e => setEditForm({...editForm, data_baixa: e.target.value})}
-                                style={{width:'100%', padding:'8px', border:'1px solid #ccc', borderRadius:'4px'}}
+                                className="modal-input"
                             />
                         </div>
 
-                        <div style={{marginBottom:'20px'}}>
-                            <label style={{display:'block', fontSize:'12px', marginBottom:'5px'}}>Motivo / Observação</label>
+                        <div className="mb-20">
+                            <label className="modal-label">Motivo / Observação</label>
                             <textarea 
                                 rows="3"
                                 value={editForm.obs_baixa}
                                 onChange={e => setEditForm({...editForm, obs_baixa: e.target.value})}
                                 placeholder="Descreva o motivo da baixa..."
-                                style={{width:'100%', padding:'8px', border:'1px solid #ccc', borderRadius:'4px', resize:'vertical'}}
+                                className="modal-textarea"
                             ></textarea>
                         </div>
 
-                        <div style={{textAlign:'right'}}>
+                        <div className="modal-footer">
                             <button 
                                 type="button" 
                                 onClick={() => setModalAberto(false)}
-                                style={{marginRight:'10px', padding:'10px 20px', border:'none', background:'#ccc', borderRadius:'4px', cursor:'pointer'}}
+                                className="modal-cancel-btn"
                             >
                                 Cancelar
                             </button>
                             <button 
                                 type="submit" 
-                                style={{padding:'10px 20px', border:'none', background:'#2563eb', color:'white', borderRadius:'4px', cursor:'pointer', fontWeight:'bold'}}
+                                className="modal-save-btn"
                             >
                                 Salvar Alterações
                             </button>

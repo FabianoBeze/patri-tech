@@ -10,6 +10,7 @@ function Salas() {
   const [salas, setSalas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   
   // Controle de Edição/Adição
   const [showAddForm, setShowAddForm] = useState(false);
@@ -22,8 +23,6 @@ function Salas() {
   const [selectedUnidade, setSelectedUnidade] = useState('');
   
   const navigate = useNavigate();
-
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -134,13 +133,14 @@ function Salas() {
   // --- RENDERIZAÇÃO VISUAL (Novo Layout) ---
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
+      {/* Removido: mobile-menu-btn e overlay, pois o Sidebar.js gerencia isso internamente. */}
       
       <main className="content">
         {/* Cabeçalho da Página */}
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div>
+        <div className="page-header">
+            <div className="page-header-content">
                 <h1>Gestão de Salas</h1>
                 <p>Visualize e gerencie as salas de cada unidade.</p>
             </div>

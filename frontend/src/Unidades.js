@@ -8,11 +8,11 @@ import { FaMapMarkerAlt, FaBuilding, FaPlus, FaArrowLeft } from 'react-icons/fa'
 function Unidades() {
   const navigate = useNavigate();
   const [unidades, setUnidades] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Reintroduzindo o estado
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
+  // Função para alternar o estado de recolhimento da sidebar
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarCollapsed(prevState => !prevState);
   };
 
   useEffect(() => {
@@ -29,15 +29,16 @@ function Unidades() {
   }, []);
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
+      {/* Removido: mobile-menu-btn e overlay, pois o Sidebar.js gerencia isso internamente. */}
       <main className="content">
         
         {/* Título e Botão Verde */}
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
-            <div>
-              <h1 style={{fontSize: '28px', color: '#1f2937', marginBottom: '5px'}}>Gerenciar Unidades</h1>
-              <p style={{color: '#6b7280'}}>Visualize e cadastre as filiais e sedes da empresa.</p>
+        <div className="page-header">
+            <div className="page-header-content">
+              <h1>Gerenciar Unidades</h1>
+              <p>Visualize e cadastre as filiais e sedes da empresa.</p>
             </div>
             
             <div style={{display: 'flex', gap: '10px'}}>
@@ -66,7 +67,7 @@ function Unidades() {
           ) : (
             <table className="custom-table">
               <thead>
-                <tr>
+                <tr className="unidade-table-header">
                   <th style={{width: '80px'}}>ID</th>
                   <th style={{width: '30%'}}>Nome da Unidade</th>
                   <th>Endereço Local</th>
@@ -77,7 +78,7 @@ function Unidades() {
                   <tr 
                     key={uni.id} 
                     onClick={() => navigate(`/unidades/${uni.id}`)}
-                    className="row-hover"
+                    className="unidade-card-row" // Aplicando a nova classe
                     title="Clique para ver detalhes"
                   >
                     {/* Coluna 1: ID azulzinho */}

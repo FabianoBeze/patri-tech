@@ -1,259 +1,423 @@
-/* --- LAYOUT GERAL --- */
-.dashboard-container {
-  display: flex; /* Mantido para organização geral, mas o sidebar fixo não participa do flex */
-  min-height: 100vh;
-  background-color: #f3f4f6; /* Fundo cinza claro */
-}
-
-/* Conteúdo principal empurrado para a direita por causa da Sidebar */
-.content {
-  margin-left: 250px; /* Largura padrão da sidebar */
-  padding: 30px;
-  overflow-y: auto;
-  transition: margin-left 0.3s ease; /* Adiciona transição para suavizar o movimento */
-
-  /* Removidas as propriedades de centralização do próprio .content */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: flex-start; */
-}
-
-/* Quando a sidebar está recolhida, o conteúdo principal se expande */
-.content.content-expanded {
-  margin-left: 60px; /* Largura da sidebar recolhida */
-}
-
-/* Adicionar um max-width para o conteúdo dentro do main para evitar que ele se espalhe demais */
-/* Esta regra ainda é válida para o conteúdo interno */
-.content > div { /* Aplica a elementos filhos diretos do .content */
-  max-width: 1200px; /* Largura máxima para o conteúdo */
-  width: 100%; /* Garante que ocupe a largura disponível até o max-width */
-  margin: 0 auto; /* Centraliza o conteúdo dentro do .content */
-}
-
-/* --- DASHBOARD (CARTÕES) --- */
-.page-header { margin-bottom: 30px; }
-.page-header h1 { font-size: 28px; color: #1f2937; margin-bottom: 5px; }
-.page-header p { color: #6b7280; }
-
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+/* Estilos para o botão de código de barras */
+.btn-barcode {
+  background-color: #007bff; /* Azul */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 15px;
-  transition: transform 0.2s;
-}
-.card:hover { transform: translateY(-2px); }
-
-.card-icon {
-  width: 50px; height: 50px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-}
-.card-info { display: flex; flex-direction: column; }
-.card-info span { font-size: 14px; color: #6b7280; font-weight: 500; }
-.card-info h3 { font-size: 24px; color: #111827; margin: 0; font-weight: 700; }
-
-/* Dashboard Parte Inferior */
-.dashboard-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 25px;
-}
-.chart-container, .recent-table {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  gap: 8px; /* Espaçamento entre o ícone e o texto */
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-/* --- TABELAS (ESTILO NOVO) --- */
-.table-panel {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+.btn-barcode:hover {
+  background-color: #0056b3; /* Azul um pouco mais escuro no hover */
+}
+
+/* Estilos do Modal de Edição */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgb(255, 255, 255);
+    padding: 25px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.modal-form-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-form-group > div {
+    flex: 1;
+}
+
+.modal-label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.modal-select,
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.modal-textarea {
+    resize: vertical;
+}
+
+.modal-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+.modal-subtitle {
+    color: #dc2626;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.modal-footer {
+    text-align: right;
+}
+
+.modal-cancel-btn {
+    margin-right: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-save-btn {
+    padding: 10px 20px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Media Queries para o Modal */
+@media (max-width: 600px) {
+    .modal-content {
+        padding: 15px;
+        max-width: 95%;
+    }
+
+    .modal-form-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+.dashboard-container .content {
   padding: 20px;
-  overflow: hidden;
+  transition: margin-left 0.3s ease;
 }
 
-.custom-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+/* Ajuste para versão desktop: margem para não sobrepor o sidebar expandido */
+@media (min-width: 768px) {
+  .dashboard-container:not(.sidebar-collapsed) main.content {
+    margin-left: 250px; /* Largura do sidebar expandido */
+  }
+
+  .dashboard-container.sidebar-collapsed main.content {
+    margin-left: 60px; /* Largura do sidebar recolhido */
+  }
 }
 
-.custom-table th {
-  text-align: left;
-  padding: 16px;
-  background-color: #f8fafc;
+/* Estilo para o cabeçalho da tabela de unidades */
+.unidade-table-header th {
+  background: #93d8eb; /* Cor de fundo semelhante ao cabeçalho da sala */
+  font-weight: bold;
+  color: #333; /* Cor do texto para contraste */
+}
+
+/* Estilos para a tabela de bens em UnidadeDetalhes */
+.sala-titulo-row {
+  background: #93d8eb;
+  font-weight: bold;
+  color: #333;
+}
+
+.bem-row {
+  opacity: 1;
+  background: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.bem-row:hover {
+  background-color: #f0f0f0;
+}
+
+.bem-inativo {
+  opacity: 0.6;
+  background: #f8f8f8;
+}
+
+.bem-ativo {
+  opacity: 1;
+  background: white;
+}
+
+.badge-alugado {
+  background: #d97706;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-doacao {
+  background: #2563eb;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-proprio {
   color: #64748b;
   font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  border-bottom: 2px solid #e2e8f0;
+  font-weight: 500;
 }
 
-.custom-table td {
-  padding: 16px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
-  vertical-align: middle;
-}
-
-.row-hover:hover {
-  background-color: #f8fafc;
-  transform: scale(1.005);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-/* ITENS ESPECÍFICOS DA TABELA */
-.id-badge {
-  background-color: #e0f2fe;
-  color: #0369a1;
-  padding: 5px 10px;
-  border-radius: 8px;
+.status-baixado {
+  color: red;
   font-weight: bold;
   font-size: 12px;
-  display: inline-block;
 }
 
-.nome-unidade {
-  font-size: 16px; font-weight: 600; color: #1e293b;
+.status-ativo {
+  color: green;
+  font-weight: bold;
+  font-size: 12px;
 }
 
-.endereco-unidade {
-  color: #64748b; font-size: 14px;
-  display: flex; align-items: center; gap: 8px;
+.btn-editar {
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease;
 }
 
-/* Responsividade (Celular) */
+.btn-editar:hover {
+  background-color: #cbd5e1;
+}
+
+/* Media Queries para a tabela de bens */
 @media (max-width: 768px) {
-  .content {
-    margin-left: 0; /* Em telas pequenas, a sidebar pode sobrepor ou ser escondida */
-    padding: 15px;
-    width: 100%; /* Garante que o conteúdo ocupe 100% da largura */
+  .custom-table th, .custom-table td {
+    padding: 8px;
+    font-size: 13px;
   }
 
-  .content.content-expanded { /* Garante que o conteúdo ocupe toda a largura quando a sidebar está oculta em mobile */
-    margin-left: 0;
-    width: 100%; /* Garante que o conteúdo ocupe 100% da largura */
+  .badge-alugado, .badge-doacao, .badge-proprio, .status-baixado, .status-ativo {
+    font-size: 10px;
+    padding: 3px 6px;
   }
 
-  .page-header {
-    flex-direction: column; /* Empilha os itens do cabeçalho verticalmente */
-    align-items: flex-start; /* Alinha os itens à esquerda */
-    gap: 15px; /* Espaçamento entre os itens */
+  .btn-editar {
+    font-size: 10px;
+    padding: 4px 8px;
   }
+}
 
-  .page-header > div { /* Ajusta o div do título e descrição */
-    width: 100%;
-  }
+/* Estilos para as linhas da tabela de unidades como cartões */
+.unidade-card-row {
+  margin-bottom: 10px; /* Espaçamento entre os cartões */
+  border: 1px solid #e2e8f0; /* Borda sutil */
+  border-radius: 8px; /* Cantos arredondados */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra leve */
+  transition: all 0.2s ease-in-out; /* Transição suave para hover */
+  display: table-row; /* Mantém o comportamento de linha de tabela */
+}
 
-  .page-header > div:last-child { /* Ajusta o div dos botões */
-    width: 100%;
-    flex-direction: column; /* Empilha os botões verticalmente */
-    gap: 10px; /* Espaçamento entre os botões */
-  }
+.unidade-card-row:hover {
+  transform: translateY(-2px); /* Efeito de "levantar" no hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada no hover */
+  background-color: #f9fafb; /* Fundo levemente alterado no hover */
+}
 
-  .page-header button {
-    width: 100%; /* Botões ocupam a largura total */
-    justify-content: center; /* Centraliza o conteúdo dos botões */
-  }
+.unidade-card-row td {
+  padding: 15px; /* Mais padding para o conteúdo do cartão */
+  border-bottom: none; /* Remove a borda inferior padrão da célula */
+}
 
-  .responsive-table-container {
-    overflow-x: auto; /* Adiciona rolagem horizontal para tabelas */
-  }
+/* Ajustes para a tabela dentro do painel */
+.panel.table-panel .custom-table {
+  border-collapse: separate; /* Permite espaçamento entre as bordas das células */
+  border-spacing: 0 10px; /* Espaçamento vertical entre as linhas */
+}
 
-  .dashboard-bottom { grid-template-columns: 1fr; }
+/* Remover bordas internas das células para o efeito de cartão */
+.panel.table-panel .custom-table tbody tr td {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* Ajustar a primeira e última célula para cantos arredondados */
+.panel.table-panel .custom-table tbody tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.panel.table-panel .custom-table tbody tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 /* Estilos para o botão de menu mobile */
 .mobile-menu-btn {
-    display: none; /* Esconde por padrão */
+    display: none; /* Escondido por padrão */
     position: fixed;
     top: 15px;
     left: 15px;
-    z-index: 1001; /* Acima do sidebar */
-    background-color: var(--primary-color);
+    background-color: #1e3a8a; /* Cor de fundo do sidebar */
     color: white;
     border: none;
-    padding: 10px 15px;
     border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 20px;
     cursor: pointer;
-    font-size: 1.2rem;
+    z-index: 1001; /* Acima do conteúdo, mas abaixo do sidebar quando aberto */
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-/* Overlay para quando o sidebar mobile estiver aberto */
-.overlay {
-    display: none; /* Esconde por padrão */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999; /* Abaixo do sidebar, mas acima do conteúdo */
 }
 
 @media (max-width: 767px) {
     .mobile-menu-btn {
-        display: block; /* Mostra o botão de hambúrguer em mobile */
+        display: block; /* Visível em mobile */
     }
 
-    .dashboard-container.sidebar-collapsed .mobile-menu-btn {
-        left: 15px; /* Posição quando o sidebar está recolhido */
+    /* Ajusta o margin-left do conteúdo principal para não ser afetado pelo sidebar em mobile */
+    .content {
+        margin-left: 0;
     }
 
-    .dashboard-container .overlay {
-        display: block; /* Mostra o overlay quando o sidebar está expandido */
+    /* Adiciona regra para ocultar o sidebar quando colapsado em mobile */
+    .dashboard-container.sidebar-collapsed .sidebar {
+        width: 0;
+        overflow: hidden;
+        transition: width 0.3s ease;
     }
-    
-    .dashboard-container.sidebar-collapsed .overlay {
-        display: none; /* Esconde o overlay quando o sidebar está recolhido */
+
+    /* Mantém o sidebar visível quando não colapsado em mobile */
+    .dashboard-container:not(.sidebar-collapsed) .sidebar {
+        width: 250px;
+        transition: width 0.3s ease;
+    }
+
+    /* Quando o sidebar está aberto em mobile, o conteúdo principal deve ter um overlay */
+    .dashboard-container:not(.sidebar-collapsed) .content {
+        position: relative; /* Para o overlay */
     }
 }
 
-/* =========================================
-   BOTÃO DE CÓDIGO DE BARRAS (Novo Visual)
-   ========================================= */
-.btn-barcode {
-  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%); /* Gradiente Roxo-Azul */
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 12px 28px;
-  border: none;
-  border-radius: 50px; /* Formato de Pílula (arredondado) */
-  cursor: pointer;
+/* Base font size for better rem scaling */
+html {
+  font-size: 16px; /* Default base font size */
+}
+
+/* General responsive adjustments */
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px; /* Slightly smaller base font for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Smaller base font for tablets */
+  }
+  .dashboard-container .content {
+    padding: 15px; /* Reduce padding on smaller screens */
+  }
+  .page-header h1 {
+    font-size: 1.8rem; /* Adjust heading size */
+  }
+  .page-header p {
+    font-size: 0.9rem; /* Adjust paragraph size */
+  }
+  .cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust card layout */
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px; /* Even smaller base font for mobile phones */
+  }
+  .dashboard-container .content {
+    padding: 10px; /* Further reduce padding */
+  }
+  .page-header h1 {
+    font-size: 1.5rem; /* Further adjust heading size */
+  }
+  .page-header p {
+    font-size: 0.8rem; /* Further adjust paragraph size */
+  }
+  .cards-container {
+    grid-template-columns: 1fr; /* Stack cards on very small screens */
+  }
+}
+
+/* Styles for page header elements, moved from inline styles */
+.page-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px; /* Espaço entre ícone e texto */
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); /* Sombra colorida brilhante */
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-bottom: 20px; /* Adiciona um espaçamento abaixo do cabeçalho */
 }
 
-.btn-barcode:hover {
-  transform: translateY(-3px); /* Sobe um pouquinho */
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5); /* Sombra aumenta */
-  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
+.page-header-content h1 {
+  font-size: 1.75rem; /* Default size, will be overridden by media queries */
+  color: #1f2937;
+  margin-bottom: 5px;
 }
 
-.btn-barcode:active {
-  transform: translateY(1px); /* Efeito de clique */
+.page-header-content p {
+  font-size: 1rem; /* Default size, will be overridden by media queries */
+  color: #6b7280;
 }
