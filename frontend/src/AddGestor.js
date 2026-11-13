@@ -29,8 +29,11 @@ function Gestores() {
     pode_editar: false,
     pode_dar_baixa: false,
     pode_cadastrar_unidade: false,
+    pode_editar_unidade: false,
     pode_cadastrar_categoria: false,
+    pode_editar_categoria: false,
     pode_cadastrar_sala: false,
+    pode_editar_sala: false,
     pode_cadastrar_gestor: false
   });
 
@@ -70,8 +73,10 @@ function Gestores() {
     setFormData({
       nome: '', cpf: '', telefone: '', endereco: '', unidade: '', password: '',
       pode_cadastrar: false, pode_editar: false, pode_dar_baixa: false,
-      pode_cadastrar_unidade: false, pode_cadastrar_categoria: false, 
-      pode_cadastrar_sala: false, pode_cadastrar_gestor: false
+      pode_cadastrar_unidade: false, pode_editar_unidade: false,
+      pode_cadastrar_categoria: false, pode_editar_categoria: false,
+      pode_cadastrar_sala: false, pode_editar_sala: false,
+      pode_cadastrar_gestor: false
     });
     setShowForm(true);
   };
@@ -89,8 +94,11 @@ function Gestores() {
       pode_editar: gestor.pode_editar,
       pode_dar_baixa: gestor.pode_dar_baixa,
       pode_cadastrar_unidade: gestor.pode_cadastrar_unidade,
+      pode_editar_unidade: gestor.pode_editar_unidade,
       pode_cadastrar_categoria: gestor.pode_cadastrar_categoria,
+      pode_editar_categoria: gestor.pode_editar_categoria,
       pode_cadastrar_sala: gestor.pode_cadastrar_sala,
+      pode_editar_sala: gestor.pode_editar_sala,
       pode_cadastrar_gestor: gestor.pode_cadastrar_gestor
     });
     setShowForm(true);
@@ -261,13 +269,28 @@ function Gestores() {
                         </label>
 
                         <label style={checkboxContainerStyle}>
+                            <input type="checkbox" name="pode_editar_unidade" checked={formData.pode_editar_unidade} onChange={handleInputChange} style={checkboxInputStyle} /> 
+                            <span>Editar Unidades</span>
+                        </label>
+
+                        <label style={checkboxContainerStyle}>
                             <input type="checkbox" name="pode_cadastrar_categoria" checked={formData.pode_cadastrar_categoria} onChange={handleInputChange} style={checkboxInputStyle} /> 
                             <span>Gerir Categorias</span>
                         </label>
 
                         <label style={checkboxContainerStyle}>
+                            <input type="checkbox" name="pode_editar_categoria" checked={formData.pode_editar_categoria} onChange={handleInputChange} style={checkboxInputStyle} /> 
+                            <span>Editar Categorias</span>
+                        </label>
+
+                        <label style={checkboxContainerStyle}>
                             <input type="checkbox" name="pode_cadastrar_sala" checked={formData.pode_cadastrar_sala} onChange={handleInputChange} style={checkboxInputStyle} /> 
                             <span>Gerir Salas</span>
+                        </label>
+
+                        <label style={checkboxContainerStyle}>
+                            <input type="checkbox" name="pode_editar_sala" checked={formData.pode_editar_sala} onChange={handleInputChange} style={checkboxInputStyle} /> 
+                            <span>Editar Salas</span>
                         </label>
 
                         <label style={checkboxContainerStyle}>

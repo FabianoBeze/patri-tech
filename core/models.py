@@ -79,6 +79,7 @@ class Gestor(models.Model):
     pode_editar = models.BooleanField(default=False, verbose_name="Pode Editar Bens?")
     pode_dar_baixa = models.BooleanField(default=False, verbose_name="Pode dar Baixa?")
     pode_cadastrar_unidade = models.BooleanField(default=False, verbose_name="Pode Cadastrar Unidades?")
+    pode_editar_unidade = models.BooleanField(default=False, verbose_name="Pode Editar Unidades?")
     pode_cadastrar_categoria = models.BooleanField(default=False, verbose_name="Pode Cadastrar Categorias?")
     pode_editar_categoria = models.BooleanField(default=False, verbose_name="Pode Editar Categorias?")
     pode_cadastrar_sala = models.BooleanField(default=False, verbose_name="Pode Cadastrar Salas?")

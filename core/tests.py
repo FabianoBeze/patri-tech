@@ -191,6 +191,40 @@ class PermissoesTests(BaseApiTestCase):
 
         self.assertEqual(resposta.status_code, status.HTTP_201_CREATED, resposta.data)
 
+    def test_historico_geral_exige_autenticacao(self):
+        resposta = self.client.get("/api/historicos/")
+
+        self.assertEqual(resposta.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_gestor_precisa_de_permissao_de_editar_unidade(self):
+        self.autenticar_como_gestor(pode_cadastrar_unidade=True)
+
+        resposta = self.client.patch(
+            f"/api/unidades/{self.unidade.id}/", {"nome": "Novo nome"}, format="json"
+        )
+
+        self.assertEqual(resposta.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_gestor_com_permissao_edita_unidade(self):
+        self.autenticar_como_gestor(pode_editar_unidade=True)
+
+        resposta = self.client.patch(
+            f"/api/unidades/{self.unidade.id}/", {"nome": "Novo nome"}, format="json"
+        )
+
+        self.assertEqual(resposta.status_code, status.HTTP_200_OK, resposta.data)
+        self.unidade.refresh_from_db()
+        self.assertEqual(self.unidade.nome, "Novo nome")
+
+    def test_gestor_precisa_de_permissao_de_editar_categoria(self):
+        self.autenticar_como_gestor(pode_cadastrar_categoria=True)
+
+        resposta = self.client.patch(
+            f"/api/categorias/{self.categoria.id}/", {"nome": "Nova"}, format="json"
+        )
+
+        self.assertEqual(resposta.status_code, status.HTTP_403_FORBIDDEN)
+
 
 class GestorSerializerTests(BaseApiTestCase):
     def setUp(self):

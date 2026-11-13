@@ -1,39 +1,34 @@
-from rest_framework import viewsets, permissions
-from rest_framework.generics import GenericAPIView
-from rest_framework.serializers import Serializer
-from rest_framework import serializers
 from django.db.models import Sum
-from .permissions import (
-    IsGestorWithCadastrarPermission,
-    IsGestorWithEditarPermission,
-    IsGestorWithCadastrarCategoriaPermission,
-    IsGestorWithEditarCategoriaPermission,
-    IsGestorWithDarBaixaPermission,
-    IsGestorWithCadastrarGestorPermission,
-    IsGestorWithCadastrarSalaPermission,
-    IsGestorWithEditarSalaPermission,
-    OrPermission,  # Importar a classe OrPermission personalizada
-    AndPermission, # Importar a classe AndPermission personalizada
-)
+from rest_framework import permissions, serializers, viewsets
 from rest_framework.decorators import action, api_view
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django.db.models import Sum
-from .models import Unidade, Categoria, Bem, Gestor, Sala, Historico
-from .serializers import UnidadeSerializer, CategoriaSerializer, DashboardResumoView,BemSerializer, GestorSerializer, SalaSerializer, HistoricoSerializer
+from rest_framework.serializers import Serializer
+
+from .models import Bem, Categoria, Gestor, Historico, Sala, Unidade
 from .permissions import (
-    IsGestorWithCadastrarPermission,
-    IsGestorWithEditarPermission,
+    AndPermission,
     IsGestorWithCadastrarCategoriaPermission,
-    IsGestorWithEditarCategoriaPermission,
-    IsGestorWithDarBaixaPermission,
     IsGestorWithCadastrarGestorPermission,
+    IsGestorWithCadastrarPermission,
     IsGestorWithCadastrarSalaPermission,
-    IsGestorWithEditarSalaPermission,
     IsGestorWithCadastrarUnidadePermission,
-    IsGestorWithCadastrarCategoriaPermission,
-    IsGestorWithCadastrarSalaPermission,
-    IsGestorWithCadastrarGestorPermission
+    IsGestorWithDarBaixaPermission,
+    IsGestorWithEditarCategoriaPermission,
+    IsGestorWithEditarPermission,
+    IsGestorWithEditarSalaPermission,
+    IsGestorWithEditarUnidadePermission,
+    OrPermission,
 )
+from .serializers import (
+    BemSerializer,
+    CategoriaSerializer,
+    GestorSerializer,
+    HistoricoSerializer,
+    SalaSerializer,
+    UnidadeSerializer,
+)
+
 class DashboardResumoSerializer(Serializer):
     total_bens = serializers.IntegerField()
     total_unidades = serializers.IntegerField()
@@ -48,9 +43,9 @@ class UnidadeViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            return [OrPermission(permissions.IsAdminUser, AndPermission(permissions.IsAuthenticated, IsGestorWithCadastrarPermission))]
+            return [OrPermission(permissions.IsAdminUser, AndPermission(permissions.IsAuthenticated, IsGestorWithCadastrarUnidadePermission))]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            return [OrPermission(permissions.IsAdminUser, AndPermission(permissions.IsAuthenticated, IsGestorWithEditarPermission))]
+            return [OrPermission(permissions.IsAdminUser, AndPermission(permissions.IsAuthenticated, IsGestorWithEditarUnidadePermission))]
         return [OrPermission(permissions.IsAdminUser, permissions.IsAuthenticated)]
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -185,7 +180,7 @@ def dashboard_resumo(request):
 class HistoricoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Historico.objects.all()
     serializer_class = HistoricoSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Historico.objects.all()

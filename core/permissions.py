@@ -62,6 +62,19 @@ class IsGestorWithCadastrarUnidadePermission(permissions.BasePermission):
         except Gestor.DoesNotExist:
             return False
 
+class IsGestorWithEditarUnidadePermission(permissions.BasePermission):
+    """
+    Permissão personalizada para verificar se o Gestor tem permissão de editar unidade.
+    """
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        try:
+            gestor = request.user.gestor
+            return gestor.pode_editar_unidade
+        except Gestor.DoesNotExist:
+            return False
+
 class IsGestorWithCadastrarCategoriaPermission(permissions.BasePermission):
     """
     Permissão personalizada para verificar se o Gestor tem permissão de cadastrar categoria.

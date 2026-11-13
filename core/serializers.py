@@ -82,8 +82,9 @@ class GestorSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'nome', 'cpf', 'telefone', 'endereco', 'unidade',
             'pode_cadastrar', 'pode_editar', 'pode_dar_baixa',
-            'pode_cadastrar_unidade', 'pode_cadastrar_categoria',
-            'pode_editar_categoria', 'pode_cadastrar_sala', 'pode_editar_sala',
+            'pode_cadastrar_unidade', 'pode_editar_unidade',
+            'pode_cadastrar_categoria', 'pode_editar_categoria',
+            'pode_cadastrar_sala', 'pode_editar_sala',
             'pode_cadastrar_gestor',
             'criado_em', 'password'
         ]
