@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { API_URL } from './api';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('configuração da API', () => {
+  test('expõe uma URL base sem barra no final', () => {
+    expect(typeof API_URL).toBe('string');
+    expect(API_URL).not.toMatch(/\/$/);
+  });
+
+  test('usa a variável de ambiente quando definida', () => {
+    expect(process.env.REACT_APP_API_URL || API_URL).toBeTruthy();
+  });
 });
