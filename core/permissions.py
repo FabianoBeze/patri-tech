@@ -3,10 +3,12 @@ from .models import Gestor
 
 class IsGestor(permissions.BasePermission):
     """
-    Permissão personalizada para verificar se o usuário é um Gestor.
+    Permissão personalizada para verificar se o usuário é um Gestor ativo.
     """
     def has_permission(self, request, view):
-        return hasattr(request.user, 'gestor') and request.user.gestor.is_active # Assumindo que Gestor tem um campo is_active ou similar
+        if not request.user.is_authenticated:
+            return False
+        return Gestor.objects.filter(user=request.user, user__is_active=True).exists()
 
 class IsGestorWithCadastrarPermission(permissions.BasePermission):
     """
@@ -125,40 +127,49 @@ class IsGestorWithCadastrarGestorPermission(permissions.BasePermission):
         except Gestor.DoesNotExist:
             return False
 
+def _resolve_permission(permission):
+    """Aceita tanto classes de permissão quanto instâncias já criadas."""
+    return permission() if isinstance(permission, type) else permission
+
+
 class OrPermission(permissions.BasePermission):
     """
     Combina permissões com lógica OR.
+
+    Aceita classes (``IsAuthenticated``) ou instâncias (``AndPermission(...)``).
     """
     def __init__(self, *permissions):
         self.permissions = permissions
 
     def has_permission(self, request, view):
-        for permission_class in self.permissions:
-            if permission_class().has_permission(request, view):
-                return True
-        return False
+        return any(
+            _resolve_permission(permission).has_permission(request, view)
+            for permission in self.permissions
+        )
 
     def has_object_permission(self, request, view, obj):
-        for permission_class in self.permissions:
-            if hasattr(permission_class(), 'has_object_permission') and permission_class().has_object_permission(request, view, obj):
-                return True
-        return False
+        return any(
+            _resolve_permission(permission).has_object_permission(request, view, obj)
+            for permission in self.permissions
+        )
 
 class AndPermission(permissions.BasePermission):
     """
     Combina permissões com lógica AND.
+
+    Aceita classes (``IsAuthenticated``) ou instâncias (``OrPermission(...)``).
     """
     def __init__(self, *permissions):
         self.permissions = permissions
 
     def has_permission(self, request, view):
-        for permission_class in self.permissions:
-            if not permission_class().has_permission(request, view):
-                return False
-        return True
+        return all(
+            _resolve_permission(permission).has_permission(request, view)
+            for permission in self.permissions
+        )
 
     def has_object_permission(self, request, view, obj):
-        for permission_class in self.permissions:
-            if hasattr(permission_class(), 'has_object_permission') and not permission_class().has_object_permission(request, view, obj):
-                return False
-        return True
+        return all(
+            _resolve_permission(permission).has_object_permission(request, view, obj)
+            for permission in self.permissions
+        )

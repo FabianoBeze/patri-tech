@@ -1,6 +1,7 @@
 from rest_framework import serializers, status
 from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response    
+from rest_framework.response import Response
+from django.conf import settings
 from django.contrib.auth.models import User
 from .models import Unidade, Categoria, Bem, Gestor, Sala, Historico
 
@@ -82,7 +83,8 @@ class GestorSerializer(serializers.ModelSerializer):
             'id', 'user', 'nome', 'cpf', 'telefone', 'endereco', 'unidade',
             'pode_cadastrar', 'pode_editar', 'pode_dar_baixa',
             'pode_cadastrar_unidade', 'pode_cadastrar_categoria',
-            'pode_cadastrar_sala', 'pode_cadastrar_gestor',
+            'pode_editar_categoria', 'pode_cadastrar_sala', 'pode_editar_sala',
+            'pode_cadastrar_gestor',
             'criado_em', 'password'
         ]
         extra_kwargs = {'user': {'read_only': True}}
@@ -91,9 +93,17 @@ class GestorSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         validated_data.pop('user', None)
 
+        if not password:
+            password = settings.DEFAULT_GESTOR_PASSWORD
+
+        if not password:
+            raise serializers.ValidationError({
+                'password': 'Informe uma senha inicial para o gestor.'
+            })
+
         user = User.objects.create_user(
             username=validated_data['cpf'],
-            password=password if password else 'mudar123',
+            password=password,
             is_staff=True
         )
         

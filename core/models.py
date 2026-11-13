@@ -80,7 +80,9 @@ class Gestor(models.Model):
     pode_dar_baixa = models.BooleanField(default=False, verbose_name="Pode dar Baixa?")
     pode_cadastrar_unidade = models.BooleanField(default=False, verbose_name="Pode Cadastrar Unidades?")
     pode_cadastrar_categoria = models.BooleanField(default=False, verbose_name="Pode Cadastrar Categorias?")
+    pode_editar_categoria = models.BooleanField(default=False, verbose_name="Pode Editar Categorias?")
     pode_cadastrar_sala = models.BooleanField(default=False, verbose_name="Pode Cadastrar Salas?")
+    pode_editar_sala = models.BooleanField(default=False, verbose_name="Pode Editar Salas?")
     pode_cadastrar_gestor = models.BooleanField(default=False, verbose_name="Pode Cadastrar Gestores?")
     
     criado_em = models.DateTimeField(auto_now_add=True)
@@ -100,15 +102,3 @@ class Historico(models.Model):
 
     def __str__(self):
         return f"{self.bem.nome} - {self.data}"
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-@receiver(post_save, sender=Bem)
-def registrar_historico(sender, instance, created, **kwargs):
-    if not created: # Apenas se o bem já existir (for uma edição)
-        Historico.objects.create(
-            bem=instance,
-            descricao=f"Movimentação/Alteração detectada. Situação: {instance.situacao}",
-            # O campo 'data' geralmente tem auto_now_add=True no model
-        )
