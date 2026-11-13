@@ -109,7 +109,7 @@ touching the business logic.
 | --- | --- |
 | Library | React 19 (Create React App) |
 | Routing | React Router 7 |
-| HTTP client | Axios (JWT interceptor with refresh) |
+| HTTP client | Axios (Bearer token attached per request) |
 | Charts | Recharts |
 | Icons | FontAwesome / React Icons |
 | Styling | Plain CSS (no UI framework) |
@@ -139,8 +139,9 @@ patri-tech/
 └── manage.py
 ```
 
-The React app talks to the REST API. The JWT is kept in `localStorage`, attached to every
-request by Axios, and refreshed through `/api/token/refresh/` when it expires.
+The React app talks to the REST API. The JWT is kept in `localStorage` and sent as a
+`Bearer` header; the helper in `src/auth.js` refreshes an expired token through
+`/api/token/refresh/` before retrying the request.
 
 ## Getting started
 
