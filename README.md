@@ -1,120 +1,177 @@
 # PATRI-TECH
 
-Sistema web de **gestão de patrimônio e ativos**: cadastro de bens, unidades, salas e
-categorias, controle de baixas, permissões por gestor e histórico de movimentações.
+A full-stack **asset and inventory management** system for organizations that still track
+equipment in spreadsheets. It records what an organization owns, where each item is, who
+is responsible for it, and every transfer between locations.
 
-Feito para quem precisa saber *o que existe, onde está e quanto vale*: setores de
-patrimônio de órgãos públicos, escolas, pequenas empresas e escritórios que ainda
-controlam bens em planilhas. O sistema é **white-label** — a identidade visual pode ser
-trocada por cliente sem mexer no código de negócio.
-
-> **English summary:** PATRI-TECH is a full-stack asset/inventory management app for
-> organizations that still track equipment in spreadsheets. It handles assets, sites,
-> rooms, categories, write-offs, per-user permissions and a movement history. Built with
-> Django REST Framework (JWT auth, OpenAPI docs) and React. See
-> [Getting started](#-como-rodar) for setup; the codebase and docs are in Portuguese.
+Built for property/inventory teams in public agencies, schools, and small and mid-sized
+companies. The product is **white-label**: branding is replaceable per customer without
+touching the business logic.
 
 ---
 
-## Sumário
+## Table of contents
 
-- [Funcionalidades](#-funcionalidades)
-- [Stack](#-stack)
-- [Arquitetura](#-arquitetura)
-- [Como rodar](#-como-rodar)
-- [Variáveis de ambiente](#-variáveis-de-ambiente)
-- [Endpoints da API](#-endpoints-da-api)
-- [Testes](#-testes)
-- [Qualidade e segurança](#-qualidade-e-segurança)
-- [Limitações conhecidas](#-limitações-conhecidas)
-- [Roadmap](#-roadmap)
-- [Licença](#-licença)
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting started](#getting-started)
+- [Environment variables](#environment-variables)
+- [API reference](#api-reference)
+- [Permissions model](#permissions-model)
+- [Tests](#tests)
+- [Security notes](#security-notes)
+- [Known limitations](#known-limitations)
+- [Roadmap](#roadmap)
+- [License](#license)
+- [Independence](#independence)
 
-## Funcionalidades
+## Features
 
-- **Dashboard** com totais de bens, unidades, categorias e valor estimado dos ativos.
-- **Bens**: tombamento único, número de série, valor, situação, estado de conservação,
-  origem (próprio, doação, alugado), categoria, unidade e sala.
-- **Baixa de bens** com data e justificativa, mantendo o registro no histórico.
-- **Unidades, salas e categorias** com relacionamentos protegidos (`PROTECT`), evitando
-  exclusões que quebrem o inventário.
-- **Permissões granulares por gestor**: cadastrar, editar e dar baixa em bens; cadastrar
-  unidades, categorias, salas e gestores; editar categorias e salas.
-- **Histórico de movimentações** por bem, com autor e data — mostra transferências entre
-  salas e entre unidades.
-- **Autenticação JWT** (access + refresh) e rotas protegidas no frontend.
-- **Documentação OpenAPI** navegável em `/docs/`.
+### Authentication
 
-## Stack
+- JWT login (`access` + `refresh`) issued by `djangorestframework-simplejwt`.
+- Frontend routes are protected by the presence of a token, and the shared fetch helper
+  (`src/auth.js`) renews an expired access token before retrying the request. Two screens
+  (`Salas`, `BensPorSala`) use that helper; the dashboard also installs a 401 interceptor.
+  The remaining screens read the token from `localStorage` and ask the user to log in
+  again when it expires.
+- Administrators use a Django user; each manager gets a Django user created on save
+  (username = CPF, `is_staff = True`).
+
+### Dashboard
+
+- Total number of assets, units, and categories.
+- Estimated value of **active** assets (written-off items excluded).
+- Pie chart of active assets grouped by category.
+- Table of the five most recently registered assets, with status badge (active/written
+  off).
+- A "scan barcode" button is present in the UI as a placeholder for a planned feature; it
+  currently only displays a notice.
+
+### Assets
+
+- Full CRUD with unique asset tag (`tombo`), optional serial number and value,
+  description, situation, conservation state, origin (owned / donated / leased), category,
+  unit, and room.
+- Written-off assets carry a write-off date and reason, are shown with a visual flag, and
+  are excluded from the dashboard's asset value.
+- Free-text filter by asset name or tag on the unit detail page.
+- Per-asset movement history, opened in a modal from the asset list.
+
+### Locations and catalog
+
+- **Units** with address, plus a detail page listing every asset of that unit.
+- **Rooms** linked to a unit, with a dedicated page listing the assets of that room.
+- **Categories** used to classify assets.
+- Relational integrity: units and categories still referenced by an asset cannot be
+  deleted (`PROTECT`), and a unit with rooms cannot be deleted. Deleting a room detaches
+  its assets (`SET NULL`) instead of deleting them.
+
+### Managers and permissions
+
+- Full CRUD for managers (name, CPF, phone, address, unit) integrated with Django users.
+- Ten permission flags, editable per manager in the UI, covering assets and each catalog
+  entity (see [Permissions model](#permissions-model)).
+- Sensitive actions are authorized by the backend, not only hidden in the interface.
+
+### Audit history
+
+- Every transfer of an asset between units or between rooms creates a history entry with
+  the author and timestamp.
+- History is read-only and available both per asset (`/api/bens/{id}/historico/`) and
+  globally (`/api/historicos/`, filterable by asset).
+
+### API documentation
+
+- OpenAPI 3 schema at `/schema/` and interactive Swagger UI at `/docs/`.
+
+> **Language note:** the interface and codebase are in Brazilian Portuguese. This document
+> is in English to make the project accessible to an international audience.
+
+## Tech stack
 
 **Backend**
 
-- Python 3.12+ / Django 5.2
-- Django REST Framework 3.16
-- SimpleJWT (autenticação)
-- drf-spectacular (OpenAPI/Swagger)
-- django-cors-headers
-- SQLite em desenvolvimento; PostgreSQL em produção via `DATABASE_URL`
+| Concern | Choice |
+| --- | --- |
+| Language / framework | Python 3.12+ · Django 5.2 |
+| API | Django REST Framework 3.16 |
+| Authentication | SimpleJWT (JWT access/refresh) |
+| Schema / docs | drf-spectacular (OpenAPI 3 + Swagger UI) |
+| CORS | django-cors-headers |
+| Database | SQLite (development) · PostgreSQL via `DATABASE_URL` (production) |
+| Configuration | python-dotenv + environment variables |
 
 **Frontend**
 
-- React 19 (Create React App)
-- React Router 7
-- Axios
-- Recharts (gráficos)
-- FontAwesome / React Icons
-- CSS próprio (sem framework de UI)
+| Concern | Choice |
+| --- | --- |
+| Library | React 19 (Create React App) |
+| Routing | React Router 7 |
+| HTTP client | Axios (JWT interceptor with refresh) |
+| Charts | Recharts |
+| Icons | FontAwesome / React Icons |
+| Styling | Plain CSS (no UI framework) |
 
-## Arquitetura
+## Architecture
 
 ```
 patri-tech/
-├── core/                     # App Django: models, serializers, views, permissions, testes
-│   ├── management/commands/  # seed_demo: popula dados fictícios
+├── core/                        # Django app: models, serializers, views, permissions, tests
+│   ├── management/commands/     # seed_demo: fictional demo dataset
 │   ├── migrations/
-│   └── tests.py
-├── projeto/                  # Configuração do projeto Django (settings, urls, wsgi/asgi)
-├── frontend/                 # Aplicação React
+│   ├── models.py                # Unidade, Sala, Categoria, Bem, Gestor, Historico
+│   ├── permissions.py           # per-flag permissions + AND/OR combinators
+│   ├── serializers.py
+│   ├── views.py                 # ViewSets and dashboard endpoint
+│   └── tests.py                 # 21 API/model tests
+├── projeto/                     # Django project (settings, urls, wsgi, asgi)
+├── frontend/
 │   ├── public/
-│   └── src/                  # Telas, componentes e cliente da API (src/api.js)
-├── .env.example              # Variáveis do backend
+│   └── src/
+│       ├── api.js               # single source of truth for the API base URL
+│       ├── App.js               # routes + PrivateRoute
+│       └── *.js                 # screens and shared components
+├── .env.example                 # backend configuration template
 ├── requirements.txt
+├── ROADMAP.md
 └── manage.py
 ```
 
-O backend expõe uma API REST consumida pelo frontend. O token JWT fica no
-`localStorage` e é renovado automaticamente pelo cliente quando expira.
+The React app talks to the REST API. The JWT is kept in `localStorage`, attached to every
+request by Axios, and refreshed through `/api/token/refresh/` when it expires.
 
-## Como rodar
+## Getting started
 
-Pré-requisitos: **Python 3.12+**, **Node.js 18+** e **npm**.
+**Requirements:** Python 3.12+, Node.js 18+ and npm.
 
 ### 1. Backend
 
 ```bash
-# na raiz do repositório
 python -m venv venv
 venv\Scripts\activate          # Windows
-# source venv/bin/activate     # Linux/macOS
+# source venv/bin/activate     # Linux / macOS
 
 pip install -r requirements.txt
 
-# configure as variáveis de ambiente
 copy .env.example .env         # Windows
-# cp .env.example .env         # Linux/macOS
+# cp .env.example .env         # Linux / macOS
 
 python manage.py migrate
 python manage.py createsuperuser
 
-# opcional: dados fictícios para explorar a interface
+# optional: fictional dataset to explore the UI
 python manage.py seed_demo
 
 python manage.py runserver
 ```
 
-- API: <http://127.0.0.1:8000/api/>
-- Swagger: <http://127.0.0.1:8000/docs/>
-- Admin: <http://127.0.0.1:8000/admin/>
+| URL | Purpose |
+| --- | --- |
+| <http://127.0.0.1:8000/api/> | REST API |
+| <http://127.0.0.1:8000/docs/> | Swagger UI |
+| <http://127.0.0.1:8000/admin/> | Django admin |
 
 ### 2. Frontend
 
@@ -123,117 +180,137 @@ cd frontend
 npm install
 
 copy .env.example .env         # Windows
-# cp .env.example .env         # Linux/macOS
+# cp .env.example .env         # Linux / macOS
 
 npm start
 ```
 
-A interface abre em <http://localhost:3000>.
+The app runs at <http://localhost:3000>.
 
-### 3. Dados de demonstração
+### 3. Demo data
 
-`seed_demo` cria unidades, categorias, salas, bens e usuários **fictícios** (CPF
-`000.000.001-00`, patrimônios inventados). A senha é gerada aleatoriamente e exibida no
-terminal; use `--password` para definir uma:
+`seed_demo` creates units, categories, rooms, assets, and users with **fictional** data
+(e.g. CPF `000.000.001-00`, invented asset tags). The password is generated randomly and
+printed to the terminal; pass `--password` to choose one:
 
 ```bash
-python manage.py seed_demo --password minha-senha
+python manage.py seed_demo --password my-password
 ```
 
-## Variáveis de ambiente
+## Environment variables
 
-Backend (`.env`, baseado em `.env.example`):
+Backend (`.env`, copied from `.env.example`):
 
-| Variável | Padrão | Descrição |
+| Variable | Default | Description |
 | --- | --- | --- |
-| `DJANGO_SECRET_KEY` | chave de desenvolvimento | **Obrigatória em produção.** Gere uma nova com `python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"` |
-| `DJANGO_DEBUG` | `True` | Use `False` em produção |
-| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Hosts aceitos, separados por vírgula |
-| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | Origens do frontend |
-| `DEFAULT_GESTOR_PASSWORD` | vazio | Senha inicial para gestores criados sem senha; se vazio, o campo passa a ser obrigatório |
-| `JWT_ACCESS_MINUTES` | `60` | Validade do access token |
-| `JWT_REFRESH_DAYS` | `7` | Validade do refresh token |
-| `DATABASE_URL` | — | Opcional; PostgreSQL em produção |
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_STORAGE_BUCKET_NAME`, `AWS_S3_REGION_NAME` | — | Opcional; armazenamento de mídia em S3 |
+| `DJANGO_SECRET_KEY` | development key | **Required in production.** Generate one with `python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"` |
+| `DJANGO_DEBUG` | `True` | Set to `False` in production |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma-separated allowed hosts |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | Frontend origins allowed to call the API |
+| `DEFAULT_GESTOR_PASSWORD` | empty | Initial password for managers created without one; when empty, the field becomes required |
+| `JWT_ACCESS_MINUTES` | `60` | Access token lifetime |
+| `JWT_REFRESH_DAYS` | `7` | Refresh token lifetime |
+| `DATABASE_URL` | — | Optional; PostgreSQL in production |
+| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_STORAGE_BUCKET_NAME`, `AWS_S3_REGION_NAME` | — | Optional; S3 media storage (all four required together) |
 
 Frontend (`frontend/.env`):
 
-| Variável | Padrão | Descrição |
+| Variable | Default | Description |
 | --- | --- | --- |
-| `REACT_APP_API_URL` | `http://127.0.0.1:8000` | URL base da API do Django |
+| `REACT_APP_API_URL` | `http://127.0.0.1:8000` | Base URL of the Django API |
 
-> Nenhum arquivo `.env` é versionado. Os arquivos `.env.example` contêm apenas
-> placeholders.
+No `.env` file is versioned; the `.env.example` files contain placeholders only.
 
-## Endpoints da API
+## API reference
 
-Autenticação: `POST /api/token/` (usuário e senha) e `POST /api/token/refresh/`.
-Envie o access token no header `Authorization: Bearer <token>`.
+All endpoints require `Authorization: Bearer <access token>` unless marked public.
 
-| Método | Rota | Descrição |
+| Method | Endpoint | Description |
 | --- | --- | --- |
-| `GET` | `/api/dashboard-stats/` | Totais do dashboard |
-| `CRUD` | `/api/unidades/` | Unidades |
-| `CRUD` | `/api/categorias/` | Categorias |
-| `CRUD` | `/api/bens/` | Bens (filtro `?sala=<id>`) |
-| `GET` | `/api/bens/{id}/historico/` | Histórico do bem |
-| `CRUD` | `/api/salas/` | Salas (filtro `?unidade=<id>`) |
-| `CRUD` | `/api/gestores/` | Gestores e suas permissões |
-| `GET` | `/api/historicos/` | Histórico geral (filtro `?bem=<id>`) |
-| `GET` | `/schema/`, `/docs/` | Schema OpenAPI e Swagger UI |
+| `POST` | `/api/token/` | Obtain access and refresh tokens (public) |
+| `POST` | `/api/token/refresh/` | Refresh an access token (public) |
+| `GET` | `/api/dashboard-stats/` | Aggregated totals (assets, units, categories, value) |
+| `GET/POST/PUT/PATCH/DELETE` | `/api/bens/` | Assets · filter with `?sala=<id>` |
+| `GET` | `/api/bens/{id}/historico/` | Movement history of one asset |
+| `GET/POST/PUT/PATCH/DELETE` | `/api/unidades/` | Units |
+| `GET/POST/PUT/PATCH/DELETE` | `/api/salas/` | Rooms · filter with `?unidade=<id>` |
+| `GET/POST/PUT/PATCH/DELETE` | `/api/categorias/` | Categories |
+| `GET/POST/PUT/PATCH/DELETE` | `/api/gestores/` | Managers and their permission flags |
+| `GET` | `/api/historicos/` | Read-only history · filter with `?bem=<id>` |
+| `GET` | `/schema/` · `/docs/` | OpenAPI schema and Swagger UI (public) |
 
-Regras de escrita: administradores (`is_staff`) podem tudo; gestores precisam da
-permissão específica da ação (`pode_cadastrar`, `pode_editar`, `pode_dar_baixa`, ...).
+## Permissions model
 
-## Testes
+Administrators (`is_staff` or superuser) can perform every operation. Managers are
+authorized per action through flags stored on their profile:
 
-**Backend** — 17 testes cobrindo autenticação, CRUD de bens, unicidade de tombo,
-histórico de transferências, permissões de gestor e criação de usuários:
+| Operation | Manager flag |
+| --- | --- |
+| Create assets | `pode_cadastrar` |
+| Edit / delete assets (including recording a write-off) | `pode_editar` |
+| Create units | `pode_cadastrar_unidade` |
+| Edit / delete units | `pode_editar_unidade` |
+| Create categories | `pode_cadastrar_categoria` |
+| Edit / delete categories | `pode_editar_categoria` |
+| Create rooms | `pode_cadastrar_sala` |
+| Edit / delete rooms | `pode_editar_sala` |
+| Manage managers | `pode_cadastrar_gestor` |
+
+`pode_dar_baixa` also exists as a flag but is not yet enforced by a dedicated endpoint —
+write-offs are currently applied through the asset edit form, under `pode_editar`. See
+[Known limitations](#known-limitations).
+
+## Tests
+
+**Backend** — 21 tests covering JWT authentication, asset CRUD, unique asset tags,
+transfer history, the permission flags of the API, and manager/user creation:
 
 ```bash
 python manage.py test
 ```
 
-**Frontend**:
+**Frontend** — 2 tests for the API configuration module:
 
 ```bash
 cd frontend
 npm test -- --watchAll=false
 ```
 
-## Qualidade e segurança
+## Security notes
 
-- Sem credenciais no repositório: configuração via variáveis de ambiente, `.env` fora
-  do Git e `.env.example` com placeholders.
-- Senha inicial de gestor não é mais fixa no código: vem de
-  `DEFAULT_GESTOR_PASSWORD` ou é exigida no cadastro.
-- Permissões de escrita verificadas no backend (não apenas escondidas na interface).
-- Senhas armazenadas com o hash do Django; autenticação por JWT com expiração curta.
-- Toda movimentação de bem gera um registro de histórico com autor e data.
-- Dados de demonstração são fictícios. **Não use dados pessoais reais** em
-  desenvolvimento.
+- No credentials in the repository: all configuration comes from environment variables,
+  `.env` is ignored, and `.env.example` holds placeholders only.
+- Manager passwords are set through `DEFAULT_GESTOR_PASSWORD` or required at creation
+  time; there is no default password hardcoded in the code.
+- Passwords are stored with Django's password hasher; JWTs expire and can be refreshed.
+- Authorization is enforced server-side for every write operation.
+- The demo dataset is fictional. **Never use real personal data in development.**
 
-## Limitações conhecidas
+## Known limitations
 
-Itens que já estão mapeados no [ROADMAP](ROADMAP.md):
+Tracked in [ROADMAP.md](ROADMAP.md):
 
-- Listagens sem paginação — com muitos bens a resposta fica pesada.
-- O CPF é usado como `username` do usuário do gestor (herança do modelo inicial).
-- Sem CI configurada; os testes rodam localmente.
-- Edições feitas pelo Django Admin não geram registro de histórico.
-- Sem container/Docker para subir o ambiente completo.
+- List endpoints are not paginated; the whole collection is returned.
+- The UI lists assets per unit and per room, but global search and server-side sorting are
+  not implemented.
+- The CPF is used as the Django `username` for managers (inherited from the initial model).
+- `pode_dar_baixa` is not enforced by a dedicated write-off endpoint yet.
+- History records unit/room transfers only; changes made through the Django admin are not
+  logged.
+- The barcode button on the dashboard is a placeholder.
+- No CI pipeline and no Docker setup yet.
 
 ## Roadmap
 
-As próximas entregas estão em [ROADMAP.md](ROADMAP.md), organizadas por tema e com
-estimativa de esforço.
+The next ~73 hours of planned work are organized by theme in [ROADMAP.md](ROADMAP.md).
 
-## Licença
+## License
 
-Distribuído sob a licença **MIT**. Veja [LICENSE](LICENSE).
+Distributed under the **MIT License**. See [LICENSE](LICENSE).
 
-## Independência
+## Independence
 
-Este é um projeto pessoal e independente, sem vínculo com órgãos públicos, empresas ou
-instituições. Brasões e marcas de terceiros usados em protótipos foram removidos; o
-produto é white-label e qualquer identidade visual é configurada por quem o utiliza.
+This is a personal, independent project with no affiliation to public agencies,
+companies, or institutions. Third-party logos and coats of arms used in early prototypes
+have been removed; the product is white-label and any visual identity is configured by
+whoever deploys it.
