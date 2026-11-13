@@ -265,6 +265,14 @@ class GestorSerializerTests(BaseApiTestCase):
         self.assertTrue(gestor.user.is_staff)
 
 
+class HealthCheckTests(TestCase):
+    def test_healthz_e_publico_e_retorna_ok(self):
+        resposta = self.client.get("/healthz")
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.json(), {"status": "ok"})
+
+
 class DashboardTests(BaseApiTestCase):
     def test_resumo_exige_autenticacao(self):
         resposta = self.client.get("/api/dashboard-stats/")

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
@@ -33,6 +34,7 @@ router.register(r'historicos', HistoricoViewSet,basename='historicos')
 
 urlpatterns = [
     path("", RedirectView.as_view(url='/docs/', permanent=True)),
+    path("healthz", lambda request: JsonResponse({"status": "ok"}), name="healthz"),
     path('admin/', admin.site.urls),
    
     # 3. Rotas da API Principal (Unidades, Bens, Categorias)

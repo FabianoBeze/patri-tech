@@ -4,7 +4,7 @@ Planned work for the upcoming cycles. Estimates are development effort, includin
 and documentation, and exist to make the next steps visible.
 
 **Current state:** CRUD for assets, units, rooms, and categories; per-manager permissions;
-movement history; JWT authentication; OpenAPI docs; 21 backend tests.
+movement history; JWT authentication; OpenAPI docs; 22 backend tests.
 
 ## Next 90 days (~73h)
 
@@ -71,7 +71,7 @@ movement history; JWT authentication; OpenAPI docs; 21 backend tests.
 - [x] Configurable manager initial password via environment variable.
 - [x] Sensitive configuration isolated in environment variables (`.env.example`).
 - [x] Frontend API base URL centralized in `REACT_APP_API_URL`.
-- [x] Initial backend test suite (21 tests).
+- [x] Initial backend test suite (22 tests).
 - [x] Dedicated edit permission flags for units, categories, and rooms.
 - [x] Global history endpoint requires authentication.
 - [x] Documentation rewritten in English.

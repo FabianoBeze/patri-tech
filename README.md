@@ -20,6 +20,7 @@ touching the business logic.
 - [API reference](#api-reference)
 - [Permissions model](#permissions-model)
 - [Tests](#tests)
+- [Deployment](#deployment)
 - [Security notes](#security-notes)
 - [Known limitations](#known-limitations)
 - [Roadmap](#roadmap)
@@ -125,7 +126,7 @@ patri-tech/
 │   ├── permissions.py           # per-flag permissions + AND/OR combinators
 │   ├── serializers.py
 │   ├── views.py                 # ViewSets and dashboard endpoint
-│   └── tests.py                 # 21 API/model tests
+│   └── tests.py                 # 22 API/model tests
 ├── projeto/                     # Django project (settings, urls, wsgi, asgi)
 ├── frontend/
 │   ├── public/
@@ -135,6 +136,8 @@ patri-tech/
 │       └── *.js                 # screens and shared components
 ├── .env.example                 # backend configuration template
 ├── requirements.txt
+├── render.yaml                  # Render blueprint (API + PostgreSQL)
+├── DEPLOY.md                    # deployment guide (Render + Vercel)
 ├── ROADMAP.md
 └── manage.py
 ```
@@ -263,7 +266,7 @@ write-offs are currently applied through the asset edit form, under `pode_editar
 
 ## Tests
 
-**Backend** — 21 tests covering JWT authentication, asset CRUD, unique asset tags,
+**Backend** — 22 tests covering JWT authentication, asset CRUD, unique asset tags,
 transfer history, the permission flags of the API, and manager/user creation:
 
 ```bash
@@ -276,6 +279,16 @@ python manage.py test
 cd frontend
 npm test -- --watchAll=false
 ```
+
+## Deployment
+
+The repository ships with deployment configuration:
+
+- `render.yaml` — Render blueprint that provisions PostgreSQL and runs the Django API
+  with Gunicorn, `collectstatic` and migrations on every deploy.
+- `frontend/vercel.json` — Vercel configuration with rewrites for client-side routes.
+
+Step-by-step instructions for the free tiers (~15 minutes): **[DEPLOY.md](DEPLOY.md)**.
 
 ## Security notes
 
@@ -300,6 +313,8 @@ Tracked in [ROADMAP.md](ROADMAP.md):
   logged.
 - The barcode button on the dashboard is a placeholder.
 - No CI pipeline and no Docker setup yet.
+- No public demo environment is live yet; `DEPLOY.md` documents how to publish one in
+  about 15 minutes.
 
 ## Roadmap
 
