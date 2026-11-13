@@ -1,8 +1,32 @@
-
-# Created by venv; see https://docs.python.org/3/library/venv.html
+# --- Python / Django ---
 venv/
+.venv/
 __pycache__/
-*.pyc
+*.py[cod]
 *.sqlite3
+db.sqlite3
+staticfiles/
+mediafiles/
+*.log
+
+# --- Environment & secrets ---
 .env
-node_modules
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# --- Node / React ---
+node_modules/
+frontend/build/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
