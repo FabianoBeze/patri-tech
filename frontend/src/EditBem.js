@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css';
-import { FaArrowLeft, FaSave, FaBuilding, FaExchangeAlt, FaInfoCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaSave, FaExchangeAlt, FaInfoCircle } from 'react-icons/fa';
+import { API_URL } from './api';
 
 function EditBem() {
   const { id } = useParams();
@@ -24,6 +25,8 @@ function EditBem() {
   useEffect(() => {
     carregarDadosAuxiliares();
     carregarBem();
+    // Carrega novamente apenas quando o id da rota muda.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Efeito cascata: Quando muda a Unidade, busca as Salas dela
@@ -39,8 +42,8 @@ function EditBem() {
     const token = localStorage.getItem('access_token');
     try {
         const [resUnidades, resCats] = await Promise.all([
-            axios.get('http://127.0.0.1:8000/api/unidades/', { headers: { Authorization: `Bearer ${token}` } }),
-            axios.get('http://127.0.0.1:8000/api/categorias/', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(`${API_URL}/api/unidades/`, { headers: { Authorization: `Bearer ${token}` } }),
+            axios.get(`${API_URL}/api/categorias/`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setUnidades(resUnidades.data);
         setCategorias(resCats.data);
@@ -50,7 +53,7 @@ function EditBem() {
   const fetchSalas = async (unidadeId) => {
       const token = localStorage.getItem('access_token');
       try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/salas/?unidade=${unidadeId}`, {
+          const response = await axios.get(`${API_URL}/api/salas/?unidade=${unidadeId}`, {
               headers: { Authorization: `Bearer ${token}` }
           });
           setSalas(response.data);
@@ -60,7 +63,7 @@ function EditBem() {
   const carregarBem = async () => {
       const token = localStorage.getItem('access_token');
       try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/bens/${id}/`, {
+          const response = await axios.get(`${API_URL}/api/bens/${id}/`, {
               headers: { Authorization: `Bearer ${token}` }
           });
           const bem = response.data;
@@ -89,7 +92,7 @@ function EditBem() {
     const payload = { ...formData, sala: formData.sala === '' ? null : formData.sala };
 
     try {
-      await axios.put(`http://127.0.0.1:8000/api/bens/${id}/`, payload, {
+      await axios.put(`${API_URL}/api/bens/${id}/`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Bem atualizado/movimentado com sucesso!');

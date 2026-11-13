@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Certifique-se de que esta linha está presente
-import logo from './logo.svg'; // Se tiver logo
+import './Login.css';
+import { API_URL } from './api';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ function Login() {
 
     try {
       // O endereço agora é /api/token/ (padrão JWT)
-      const response = await axios.post('http://127.0.0.1:8000/api/token/', {
+      const response = await axios.post(`${API_URL}/api/token/`, {
         username: username, // O Django espera 'username', não 'email'
         password: password
       });
@@ -41,9 +41,9 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src="/brasao-marica.png" alt="Brasão de Maricá" className="login-logo" />
-        <h1>Secretaria de Educação</h1>
-        <h2>Gestão Patrimonial</h2>
+        <div className="login-logo" aria-hidden="true">PT</div>
+        <h1>PATRI-TECH</h1>
+        <h2>Gestão de Patrimônio</h2>
         
         {error && <div className="error-message">{error}</div>}
         

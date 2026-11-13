@@ -1,3 +1,4 @@
+import { API_URL } from './api';
 // Função para decodificar o token JWT e verificar a expiração
 export const isTokenExpired = (token) => {
     if (!token) return true;
@@ -14,7 +15,7 @@ export const isTokenExpired = (token) => {
 // Função para renovar o token de acesso
 const refreshAccessToken = async (refreshToken, navigate) => {
     try {
-        const response = await fetch('http://localhost:8000/api/token/refresh/', {
+        const response = await fetch(`${API_URL}/api/token/refresh/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

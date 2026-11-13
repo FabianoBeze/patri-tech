@@ -4,6 +4,7 @@ import { authenticatedFetch } from './auth';
 import Sidebar from './Sidebar'; // Importa a barra lateral
 import './Dashboard.css'; // Usa o CSS padrão do painel
 import { FaEdit, FaTrash, FaPlus, FaArrowLeft, FaSave, FaTimes } from 'react-icons/fa'; // Ícones
+import { API_URL } from './api';
 
 function Salas() {
   // --- SEUS ESTADOS ORIGINAIS ---
@@ -34,7 +35,7 @@ function Salas() {
     setError(null);
     setLoading(true);
     try {
-      const response = await authenticatedFetch('http://localhost:8000/api/salas/', {}, navigate);
+      const response = await authenticatedFetch(`${API_URL}/api/salas/`, {}, navigate);
       const data = await response.json();
       setSalas(data);
     } catch (err) {
@@ -47,7 +48,7 @@ function Salas() {
 
   const fetchUnidades = useCallback(async () => {
     try {
-      const response = await authenticatedFetch('http://localhost:8000/api/unidades/', {}, navigate);
+      const response = await authenticatedFetch(`${API_URL}/api/unidades/`, {}, navigate);
       const data = await response.json();
       setUnidades(data);
       if (data.length > 0 && !selectedUnidade) {
@@ -73,7 +74,7 @@ function Salas() {
     e.preventDefault();
     setError(null);
     try {
-      const response = await authenticatedFetch('http://localhost:8000/api/salas/', {
+      const response = await authenticatedFetch(`${API_URL}/api/salas/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome: newSalaNome, unidade: selectedUnidade }),
@@ -99,7 +100,7 @@ function Salas() {
     e.preventDefault();
     setError(null);
     try {
-      const response = await authenticatedFetch(`http://localhost:8000/api/salas/${editingSala.id}/`, {
+      const response = await authenticatedFetch(`${API_URL}/api/salas/${editingSala.id}/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome: editedSalaNome }), // Note: Dependendo do backend, pode precisar enviar a unidade também
@@ -118,7 +119,7 @@ function Salas() {
   const handleDeleteSala = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir esta sala?')) {
       try {
-        const response = await authenticatedFetch(`http://localhost:8000/api/salas/${id}/`, {
+        const response = await authenticatedFetch(`${API_URL}/api/salas/${id}/`, {
           method: 'DELETE',
         }, navigate);
 

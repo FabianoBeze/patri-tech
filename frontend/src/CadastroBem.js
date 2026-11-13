@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { FaSave, FaArrowLeft } from 'react-icons/fa';
 import './Dashboard.css';
+import { API_URL } from './api';
 
 function CadastroBem() {
   const navigate = useNavigate();
@@ -15,15 +16,15 @@ function CadastroBem() {
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    axios.get('http://127.0.0.1:8000/api/unidades/', config).then(res => setUnidades(res.data));
-    axios.get('http://127.0.0.1:8000/api/categorias/', config).then(res => setCategorias(res.data));
+    axios.get(`${API_URL}/api/unidades/`, config).then(res => setUnidades(res.data));
+    axios.get(`${API_URL}/api/categorias/`, config).then(res => setCategorias(res.data));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('access_token');
     try {
-      await axios.post('http://127.0.0.1:8000/api/bens/', formData, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${API_URL}/api/bens/`, formData, { headers: { Authorization: `Bearer ${token}` } });
       alert('Cadastrado com sucesso!');
       navigate('/bens');
     } catch (err) { alert('Erro ao salvar.'); }

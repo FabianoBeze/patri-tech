@@ -3,8 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css';
-import { FaArrowLeft, FaSave, FaPlusCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaPlusCircle } from 'react-icons/fa';
 import './AddBem.css';
+import { API_URL } from './api';
 
 
 
@@ -41,8 +42,8 @@ function AddBem() {
     const token = localStorage.getItem('access_token');
     try {
         const [resUnidades, resCats] = await Promise.all([
-            axios.get('http://127.0.0.1:8000/api/unidades/', { headers: { Authorization: `Bearer ${token}` } }),
-            axios.get('http://127.0.0.1:8000/api/categorias/', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(`${API_URL}/api/unidades/`, { headers: { Authorization: `Bearer ${token}` } }),
+            axios.get(`${API_URL}/api/categorias/`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setUnidades(resUnidades.data);
         setCategorias(resCats.data);
@@ -52,7 +53,7 @@ function AddBem() {
   const fetchSalas = async (unidadeId) => {
       const token = localStorage.getItem('access_token');
       try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/salas/?unidade=${unidadeId}`, {
+          const response = await axios.get(`${API_URL}/api/salas/?unidade=${unidadeId}`, {
               headers: { Authorization: `Bearer ${token}` }
           });
           setSalas(response.data);
@@ -77,7 +78,7 @@ function AddBem() {
     const payload = { ...formData, sala: formData.sala === '' ? null : formData.sala };
 
     try {
-      await axios.post('http://127.0.0.1:8000/api/bens/', payload, {
+      await axios.post(`${API_URL}/api/bens/`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Bem cadastrado com sucesso!');

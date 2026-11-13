@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css';
 import './AddBem.css';
+import { API_URL } from './api';
 
 function AddUnidade() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function AddUnidade() {
 
     try {
       // 2. Envia o token no cabeçalho (headers) da requisição
-      await axios.post('http://127.0.0.1:8000/api/unidades/', formData, {
+      await axios.post(`${API_URL}/api/unidades/`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`, // Importante: Bearer + token
           'Content-Type': 'application/json'

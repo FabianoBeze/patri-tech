@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css'; 
 import { FaEdit, FaTrash, FaPlus, FaArrowLeft, FaSave, FaTimes, FaUserTie, FaCheckSquare } from 'react-icons/fa';
+import { API_URL } from './api';
 
 function Gestores() {
   const navigate = useNavigate();
@@ -44,8 +45,8 @@ function Gestores() {
 
     try {
       const [resGestores, resUnidades] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/gestores/', config),
-        axios.get('http://127.0.0.1:8000/api/unidades/', config)
+        axios.get(`${API_URL}/api/gestores/`, config),
+        axios.get(`${API_URL}/api/unidades/`, config)
       ]);
       setGestores(resGestores.data);
       setUnidades(resUnidades.data);
@@ -102,10 +103,10 @@ function Gestores() {
 
     try {
       if (editingId) {
-        await axios.put(`http://127.0.0.1:8000/api/gestores/${editingId}/`, formData, config);
+        await axios.put(`${API_URL}/api/gestores/${editingId}/`, formData, config);
         alert('Gestor atualizado com sucesso!');
       } else {
-        await axios.post('http://127.0.0.1:8000/api/gestores/', formData, config);
+        await axios.post(`${API_URL}/api/gestores/`, formData, config);
         alert('Gestor cadastrado com sucesso!');
       }
       setShowForm(false);
@@ -120,7 +121,7 @@ function Gestores() {
     if (window.confirm("Tem certeza que deseja excluir este gestor?")) {
       const token = localStorage.getItem('access_token');
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/gestores/${id}/`, {
+        await axios.delete(`${API_URL}/api/gestores/${id}/`, {
            headers: { 'Authorization': `Bearer ${token}` }
         });
         carregarDados();

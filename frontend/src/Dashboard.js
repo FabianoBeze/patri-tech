@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { FaBox, FaBuilding, FaTags, FaDollarSign, FaBarcode } from 'react-icons/fa'; // Removi FaBars
+import { API_URL } from './api';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const location = useLocation(); // Adicionado useLocation
   const [bens, setBens] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -34,7 +34,7 @@ function Dashboard() {
           if (refreshToken) {
             try {
                 const res = await axios.post(
-                'http://127.0.0.1:8000/api/token/refresh/',
+                `${API_URL}/api/token/refresh/`,
                 { refresh: refreshToken }
                 );
                 localStorage.setItem('access_token', res.data.access);
@@ -56,9 +56,9 @@ function Dashboard() {
     const token = localStorage.getItem('access_token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    axios.get('http://127.0.0.1:8000/api/bens/', config).then(res => setBens(res.data)).catch(console.error);
-    axios.get('http://127.0.0.1:8000/api/unidades/', config).then(res => setUnidades(res.data)).catch(console.error);
-    axios.get('http://127.0.0.1:8000/api/categorias/', config).then(res => setCategorias(res.data)).catch(console.error);
+    axios.get(`${API_URL}/api/bens/`, config).then(res => setBens(res.data)).catch(console.error);
+    axios.get(`${API_URL}/api/unidades/`, config).then(res => setUnidades(res.data)).catch(console.error);
+    axios.get(`${API_URL}/api/categorias/`, config).then(res => setCategorias(res.data)).catch(console.error);
   }, []); // Este useEffect é para a busca de dados e o interceptor
 
   // --- CÁLCULOS ---

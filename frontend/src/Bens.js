@@ -4,7 +4,8 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import HistoricoModal from './HistoricoModal';
 import './Dashboard.css';
-import { FaEdit, FaTrash, FaPlus, FaHistory, FaSearch, FaBox, FaArrowLeft } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaHistory, FaSearch, FaArrowLeft } from 'react-icons/fa';
+import { API_URL } from './api';
 
 function Bens() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function Bens() {
     setLoading(true);
     const token = localStorage.getItem('access_token');
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/bens/', {
+      const response = await axios.get(`${API_URL}/api/bens/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBens(response.data);
@@ -41,7 +42,7 @@ function Bens() {
     if (window.confirm("Tem certeza que deseja excluir este bem?")) {
       const token = localStorage.getItem('access_token');
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/bens/${id}/`, {
+        await axios.delete(`${API_URL}/api/bens/${id}/`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         fetchBens();
@@ -60,7 +61,7 @@ function Bens() {
     } else {
         const token = localStorage.getItem('access_token');
         try {
-            const res = await axios.get(`http://127.0.0.1:8000/api/bens/${bem.id}/historico/`, {
+            const res = await axios.get(`${API_URL}/api/bens/${bem.id}/historico/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setHistoricoSelecionado(res.data);

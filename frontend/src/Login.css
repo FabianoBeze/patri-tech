@@ -18,10 +18,20 @@
   max-width: 400px; /* Largura máxima para a caixa de login */
 }
 
-/* Estilos para o logo (se houver) */
+/* Marca textual exibida acima do título */
 .login-logo {
-  max-width: 400px; /* Ajuste conforme o tamanho do seu logo */
-  margin-bottom: 20px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: #0f4c81;
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 /* Estilos para o título principal */

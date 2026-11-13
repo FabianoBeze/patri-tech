@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css'; // Garante o estilo padrão
 import { FaEdit, FaTrash, FaPlus, FaArrowLeft, FaSave, FaTimes, FaTags } from 'react-icons/fa';
+import { API_URL } from './api';
 
 function Categorias() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function Categorias() {
     setLoading(true);
     const token = localStorage.getItem('access_token');
     
-    axios.get('http://127.0.0.1:8000/api/categorias/', {
+    axios.get(`${API_URL}/api/categorias/`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(response => {
@@ -69,14 +70,14 @@ function Categorias() {
     try {
         if (editingCategoria) {
             // EDITA (PUT)
-            await axios.put(`http://127.0.0.1:8000/api/categorias/${editingCategoria.id}/`, 
+            await axios.put(`${API_URL}/api/categorias/${editingCategoria.id}/`, 
                 { nome: nomeCategoria }, 
                 { headers }
             );
             alert("Categoria atualizada com sucesso!");
         } else {
             // CRIA (POST)
-            await axios.post('http://127.0.0.1:8000/api/categorias/', 
+            await axios.post(`${API_URL}/api/categorias/`, 
                 { nome: nomeCategoria }, 
                 { headers }
             );
@@ -100,7 +101,7 @@ function Categorias() {
     if (window.confirm("Tem certeza que deseja excluir esta categoria?")) {
         const token = localStorage.getItem('access_token');
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/categorias/${id}/`, {
+            await axios.delete(`${API_URL}/api/categorias/${id}/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             fetchCategorias();

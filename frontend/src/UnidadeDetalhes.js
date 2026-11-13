@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { FaSearch, FaArrowLeft, FaEdit, FaTimes, FaBars } from 'react-icons/fa';
 import './Dashboard.css';
+import { API_URL } from './api';
 
 
 
@@ -80,7 +81,7 @@ function UnidadeDetalhes() {
       return;
     }
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/bens/', {
+      const response = await axios.get(`${API_URL}/api/bens/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       console.log("Dados brutos da API de bens:", response.data); // Novo log
@@ -106,7 +107,7 @@ function UnidadeDetalhes() {
       return;
     }
 
-    axios.get(`http://127.0.0.1:8000/api/unidades/${id}/`, {
+    axios.get(`${API_URL}/api/unidades/${id}/`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(response => {
@@ -146,7 +147,7 @@ function UnidadeDetalhes() {
     };
 
     try {
-        await axios.patch(`http://127.0.0.1:8000/api/bens/${bemEditando.id}/`, dadosParaEnviar, {
+        await axios.patch(`${API_URL}/api/bens/${bemEditando.id}/`, dadosParaEnviar, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         alert('Bem atualizado com sucesso!');

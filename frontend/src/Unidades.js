@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Dashboard.css'; 
 import { FaMapMarkerAlt, FaBuilding, FaPlus, FaArrowLeft } from 'react-icons/fa'; // Ícones
+import { API_URL } from './api';
 
 function Unidades() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Unidades() {
     const token = localStorage.getItem('access_token');
     const config = { headers: { 'Authorization': `Bearer ${token}` } };
 
-    axios.get('http://127.0.0.1:8000/api/unidades/', config)
+    axios.get(`${API_URL}/api/unidades/`, config)
       .then(response => {
         setUnidades(response.data);
       })

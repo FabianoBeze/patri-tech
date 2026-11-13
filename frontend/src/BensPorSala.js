@@ -4,6 +4,7 @@ import { authenticatedFetch } from './auth';
 import Sidebar from './Sidebar';
 import './Dashboard.css'; // Ou um CSS específico para bens
 import { FaArrowLeft } from 'react-icons/fa';
+import { API_URL } from './api';
 
 function BensPorSala() {
   const { salaId } = useParams(); // Pega o ID da sala da URL
@@ -25,12 +26,12 @@ function BensPorSala() {
     setError(null);
     try {
       // Primeiro, busca os detalhes da sala para pegar o nome
-      const salaResponse = await authenticatedFetch(`http://localhost:8000/api/salas/${salaId}/`, {}, navigate);
+      const salaResponse = await authenticatedFetch(`${API_URL}/api/salas/${salaId}/`, {}, navigate);
       const salaData = await salaResponse.json();
       setSalaNome(salaData.nome);
 
       // Em seguida, busca os bens filtrados pela sala
-      const bensResponse = await authenticatedFetch(`http://localhost:8000/api/bens/?sala=${salaId}`, {}, navigate);
+      const bensResponse = await authenticatedFetch(`${API_URL}/api/bens/?sala=${salaId}`, {}, navigate);
       const bensData = await bensResponse.json();
       setBens(bensData);
     } catch (err) {
